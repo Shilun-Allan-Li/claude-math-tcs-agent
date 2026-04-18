@@ -29,7 +29,8 @@ distill/
     additive-combinatorics.md
     spectral-graph-theory.md
     ...
-  mathematician-distillation-template.md   # template for new packs
+  individual-template.md                   # template for individual packs (heuristic mind)
+  batch-template.md                        # template for batch packs (domain playbook)
   concise_math_style.md                    # hand-authored, shape-compatible
   readme.md                                # this file
 ```
@@ -42,7 +43,7 @@ One pack per file. Kebab-case filename — surname for individuals, domain slug 
 
 1. Pick a mathematician whose style is sharply identified, not just "someone good." Check there is enough primary material — collected works, extended correspondence, several books or long papers.
 2. Read a representative cross-section of the primary material, looking for *recurring* habits, not isolated brilliance.
-3. Fill the sections of `mathematician-distillation-template.md`.
+3. Fill the sections of `individual-template.md` — lead with heuristic content (first moves, reframings, characteristic tools), not written-style patterns.
 4. The pack passes when a reader blind to the name can recognize the voice from the pack alone.
 
 **Batch pack:**
@@ -50,7 +51,7 @@ One pack per file. Kebab-case filename — surname for individuals, domain slug 
 1. Fix the domain and a time window (e.g. "algorithmic graph theory, 2015–2025").
 2. Pick 5–15 active authors in that slice. Prefer breadth over depth; the batch exists to wash out idiosyncrasy.
 3. Read 3–5 papers per author, looking for patterns *across* authors, not within any one.
-4. Fill the template. If a section has no stable signal across the batch, delete rather than invent.
+4. Fill the sections of `batch-template.md` — lead with the decision table and attack stack. If a section has no stable signal across the batch, delete rather than invent.
 5. The pack passes when a reader blind to the source batch can still tell what the domain values.
 
 ## Usage
