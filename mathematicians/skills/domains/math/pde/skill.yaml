@@ -1,0 +1,14 @@
+# Structured sidecar for math.pde. SKILL.md is the source of truth;
+# regenerate this file from the frontmatter when it changes.
+id: math.pde
+name: pde
+display_name: PDE
+chip: "problem involves a partial differential equation — classical (Laplace, heat, wave, Navier–Stokes, Burgers) or..."
+category: math
+layer: domain
+status: curated
+taxonomy:
+  msc: ["35-XX"]
+  arxiv: []
+depends_on: [core.proof-writing, math.real-analysis]
+path: domains/math/pde

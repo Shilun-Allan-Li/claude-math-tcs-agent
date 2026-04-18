@@ -1,55 +1,66 @@
 # /proof-step
 
-Work on a specific proof step, or review the assembled proof.
+Work on a specific proof step, or review one.
 
 ## Usage
-- `/proof-step <N>` — work on step number N (e.g., `/proof-step 3`)
-- `/proof-step review` — run the reviewer on the assembled proof
-- `/proof-step review <N>` — run the reviewer on a specific step
+- `/proof-step <N>` — work on step N (e.g., `/proof-step 3`)
+- `/proof-step review` — review the assembled proof
+- `/proof-step review <N>` — review a specific step
 
 ## Instructions
 
-Read the argument after this command to determine the step number or action.
+Read the argument after this command.
 
 ---
 
-**If a step number N is provided:**
+**Argument is a step number `N`:**
 
-1. First check `proof/OUTLINE.md` exists. If not, tell the user: "No proof outline found. Run `/prove [theorem]` first."
+1. Preflight — this checks the outline exists, step N is in it, and flags unmet prerequisites:
 
-2. Check if `proof/step_NN.md` already exists (use zero-padded number, e.g., `step_03.md`).
-   - If it exists: ask "Step N already has a file (`proof/step_NN.md`). Do you want to (a) redo it, (b) review it, or (c) skip to the next step?"
-
-3. Check if all prerequisite steps (all steps before N) are marked `[x]` in OUTLINE.md.
-   - If not: warn "Step N depends on earlier steps that are not yet complete: [list them]. It is recommended to complete those first, but you can proceed anyway."
-
-4. Check `proof/exploration.md` — if it has content relevant to this step, mention it to the user before delegating.
-
-5. Use the `proof-prover` agent to work on this step. Pass it:
-   "Work on step [N] of the proof. The outline is in proof/OUTLINE.md. Complete this step and save it to proof/step_NN.md."
-
-6. After the prover completes, update OUTLINE.md to mark step N as `[x]` if the prover didn't already do so.
-
-7. Report back:
    ```
-   Step N complete: [one-line summary from the step file]
-
-   Progress: X/Y steps done
-   Next: Run `/proof-step N+1` to continue.
+   python3 -m claude_prover.lib.cli step-preflight <N>
    ```
 
+   If it exits non-zero, print the message and stop. If it prints `WARN:` lines, surface them to the user before proceeding.
+
+2. Resolve the target path:
+
+   ```
+   python3 -m claude_prover.lib.cli step-path <N>
+   ```
+
+3. If `proof/exploration.md` exists, `Read` it and mention any content relevant to step N before delegating.
+
+4. Delegate to the `proof-prover` agent. Pass it:
+
+   > "Work on step N of the proof. Read `proof/OUTLINE.md` for context and the path from step-path above. Save your step to that file."
+
+5. After the prover returns, mark the step done:
+
+   ```
+   python3 -m claude_prover.lib.cli mark-done <N>
+   ```
+
+6. Print the new status:
+
+   ```
+   python3 -m claude_prover.lib.cli status
+   ```
+
 ---
 
-**If the argument is `review`** (no step number):
+**Argument is `review` (no number):**
 
-Use the `proof-reviewer` agent. Pass it: "Review the assembled proof in proof/assembled.md end-to-end."
+If `proof/assembled.md` does not exist, say: "No assembled proof found. Run `/prove --assemble` first." Otherwise delegate to `proof-reviewer`:
 
-If `proof/assembled.md` does not exist, say: "No assembled proof found. Run `/prove --assemble` first, then review."
+> "Review the assembled proof in `proof/assembled.md` end-to-end. Save your verdict to `proof/review_assembled.md`."
 
 ---
 
-**If the argument is `review N`** (with step number):
+**Argument is `review N`:**
 
-Use the `proof-reviewer` agent. Pass it: "Review step [N] from proof/step_NN.md in the context of proof/OUTLINE.md."
+Delegate to `proof-reviewer`:
+
+> "Review step N from `proof/step_NN.md` in the context of `proof/OUTLINE.md`. Save your verdict to `proof/review_stepNN.md`."
 
 $ARGUMENTS
