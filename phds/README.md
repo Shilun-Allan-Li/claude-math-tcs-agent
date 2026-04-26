@@ -1,4 +1,4 @@
-# phds/
+# researchers/
 
 Bridge department between `distill/` and `claude_prover/`. One team, flat structure. The phds receive distilled packs from `distill/`, **sort and curate** them, and generate the procedural skills the proving-agents use.
 
