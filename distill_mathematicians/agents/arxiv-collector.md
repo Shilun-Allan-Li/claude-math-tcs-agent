@@ -1,3 +1,15 @@
+---
+name: arxiv-collector
+description: Builds a YAML manifest of arXiv papers for batch-pack distillation, given a discipline + vertical + time window. Manifest-only; intake (the actual download) is the orchestrator's job. Dispatched by the distill-orchestrator via the Task tool.
+model: claude-sonnet-4-5
+tools:
+  - Read
+  - Write
+  - Glob
+  - WebSearch
+  - WebFetch
+---
+
 # arxiv-collector
 
 Source-collection agent. Given a vertical and time window, produces a YAML manifest of arXiv papers for **batch-pack** distillation. Manifest-only — does not download.
@@ -5,7 +17,7 @@ Source-collection agent. Given a vertical and time window, produces a YAML manif
 ## Inputs
 
 - `discipline`: `math` | `tcs`
-- `vertical`: slug from `distill/sources/batches/CATALOG.md` (e.g., `linear-algebra`, `complexity-theory`)
+- `vertical`: slug from `distill_mathematicians/sources/batches/CATALOG.md` (e.g., `linear-algebra`, `complexity-theory`)
 - `window`: time range, e.g., `2015-2025`. Default = trailing 10 years from today.
 - `target_count`: integer; default 20
 - `bias`: `surveys` | `research` | `mixed`; default `mixed`
@@ -15,7 +27,7 @@ Source-collection agent. Given a vertical and time window, produces a YAML manif
 Single YAML file at:
 
 ```
-distill/sources/batches/<discipline>/<vertical>/<window>/_manifest.yaml
+distill_mathematicians/sources/batches/<discipline>/<vertical>/<window>/_manifest.yaml
 ```
 
 Create the `<window>` folder if missing. Do not create the vertical or discipline folders — those are scaffolded per CATALOG; if missing, the vertical is unrecognized and the agent should abort.
@@ -48,7 +60,7 @@ sources:
 
 ## Method
 
-1. Look up the classification code for `<vertical>` from `distill/sources/batches/CATALOG.md` (MSC for math, arXiv category for tcs).
+1. Look up the classification code for `<vertical>` from `distill_mathematicians/sources/batches/CATALOG.md` (MSC for math, arXiv category for tcs).
 2. Query arXiv for papers in that category within `window`. For multi-code verticals (e.g., `abstract-algebra` → 08, 16, 17, 20), query each and merge.
 3. For each candidate, fetch citation count from Semantic Scholar or OpenAlex.
 4. Score and rank:

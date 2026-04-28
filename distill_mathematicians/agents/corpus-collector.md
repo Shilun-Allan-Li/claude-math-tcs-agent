@@ -1,3 +1,15 @@
+---
+name: corpus-collector
+description: Builds a YAML manifest of primary corpus material (collected works, correspondence, key books, lectures) plus a few high-quality secondary expositions for an individual-pack distillation, given a mathematician's surname. Manifest-only. Dispatched by the distill-orchestrator via the Task tool.
+model: claude-sonnet-4-5
+tools:
+  - Read
+  - Write
+  - Glob
+  - WebSearch
+  - WebFetch
+---
+
 # corpus-collector
 
 Source-collection agent. Given a mathematician's surname, produces a YAML manifest of primary source material — collected works, correspondence, books, lectures, plus a small set of high-quality secondary expositions — for **individual-pack** distillation (heuristic mind). Manifest-only.
@@ -16,7 +28,7 @@ This is a different beast from `arxiv-collector` and `github-curator`: the targe
 Single YAML file at:
 
 ```
-distill/sources/heuristic_mind/<surname>/_manifest.yaml
+distill_mathematicians/sources/heuristic_mind/<surname>/_manifest.yaml
 ```
 
 The surname folder is scaffolded; if missing, the surname is unrecognized and the agent should abort.

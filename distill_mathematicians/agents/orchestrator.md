@@ -1,10 +1,23 @@
+---
+name: distill-orchestrator
+description: Runs a complete distillation job end-to-end — collect, intake, extract, merge, pack-write, promote. Dispatches all sub-agents (collectors and extractor) via the Task tool. Owns the pipeline; never extracts or collects itself.
+model: claude-opus-4-6
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Bash
+  - Task
+---
+
 # orchestrator
 
-Runs a complete distillation job from job spec to a finished pack at `phds/knowledge_db/`. Owns the pipeline; does not extract or collect itself — it dispatches to the three source-collection agents, runs intake, runs the extractor, applies the framework's gates, and promotes the result.
+Runs a complete distillation job from job spec to a finished pack at `phds/knowledge_db/`. Owns the pipeline; does not extract or collect itself — it dispatches the three source-collection agents and the extractor (all via the Task tool), runs intake, applies the framework's gates, and promotes the result.
 
 ## Job spec
 
-A run begins with a YAML job spec at `distill/runs/<run-id>/job.yaml`. Two modes:
+A run begins with a YAML job spec at `distill_mathematicians/runs/<run-id>/job.yaml`. Two modes:
 
 ```yaml
 # individual mode — produces a heuristic-mind pack
@@ -19,7 +32,7 @@ target_secondary_count: 4
 # batch mode — produces a domain-playbook pack
 mode: batch
 discipline: math                   # math | tcs
-vertical: linear-algebra           # must match distill/sources/batches/CATALOG.md
+vertical: linear-algebra           # must match distill_mathematicians/sources/batches/CATALOG.md
 window: 2015-2025
 arxiv_target: 20                   # forwarded to arxiv-collector
 github_target: 10                  # forwarded to github-curator
@@ -35,14 +48,14 @@ Final artifact path on success:
 - Individual mode → `phds/knowledge_db/individuals/<surname>.md`
 - Batch mode → `phds/knowledge_db/batches/<vertical>-<window>.md`
 
-The pack follows `distill/templates/individual-template.md` or `distill/templates/batch-template.md` and conforms to `distill/reference/extraction-framework.md` §14 (distilled-layer requirements).
+The pack follows `distill_mathematicians/templates/individual-template.md` or `distill_mathematicians/templates/batch-template.md` and conforms to `distill_mathematicians/reference/extraction-framework.md` §14 (distilled-layer requirements).
 
 ## Per-run scratch
 
 While a run is in progress:
 
 ```
-distill/runs/<run-id>/
+distill_mathematicians/runs/<run-id>/
   job.yaml                  # original spec
   manifests/                # copies of collector outputs, for traceability
   extractions/
@@ -63,13 +76,13 @@ Each phase has a clear pre/post-condition. The orchestrator does not begin a pha
 - Individual mode → dispatch `corpus-collector` with surname + secondary settings.
 - Batch mode → dispatch `arxiv-collector` and `github-curator` in parallel with discipline/vertical/window.
 
-**Pre:** valid `job.yaml`. **Post:** one or more manifests under `distill/sources/...`.
+**Pre:** valid `job.yaml`. **Post:** one or more manifests under `distill_mathematicians/sources/...`.
 
 If *all* collectors return zero entries → abort with diagnostic. No sources, no run.
 
 ### 2. Intake
 
-The orchestrator reads every manifest from phase 1, fetches each entry, and writes the file to the manifest's implied target path under `distill/sources/`. **Intake is the only place real I/O happens** — collectors emit manifests, intake materializes them.
+The orchestrator reads every manifest from phase 1, fetches each entry, and writes the file to the manifest's implied target path under `distill_mathematicians/sources/`. **Intake is the only place real I/O happens** — collectors emit manifests, intake materializes them.
 
 **Pre:** manifests exist. **Post:** every manifest entry has a file on disk; `_intake.log` records URL → path mapping.
 
@@ -77,7 +90,9 @@ If individual entries fail (link rot, paywall) → log and continue. If more tha
 
 ### 3. Extract (per source, parallelizable)
 
-For each source file, run an extraction pass following `distill/reference/extraction-framework.md` §§9–13. Emit per-source notes at `runs/<run-id>/extractions/<source-id>.md` using §10 evidence-record format. **Each candidate pattern at this stage carries exactly one evidence point** — the source it came from.
+For each source file, dispatch the `extractor` subagent (via the Task tool) with `{run_id, source_path, source_id}`. The extractor follows `distill_mathematicians/reference/extraction-framework.md` §§9–13 and emits one file per source at `runs/<run-id>/extractions/<source-id>.md` using §10 evidence-record format. **Each candidate pattern at this stage carries exactly one evidence point** — the source it came from. The orchestrator does not extract directly.
+
+Parallelizable: dispatch many extractor calls before waiting on results. Each is independent.
 
 **Pre:** sources/ populated. **Post:** one extraction file per source.
 

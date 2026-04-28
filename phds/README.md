@@ -1,6 +1,6 @@
 # researchers/
 
-Bridge department between `distill/` and `claude_prover/`. One team, flat structure. The phds receive distilled packs from `distill/`, **sort and curate** them, and generate the procedural skills the proving-agents use.
+Bridge department between `distill_mathematicians/` and `claude_prover/`. One team, flat structure. The phds receive distilled packs from `distill_mathematicians/`, **sort and curate** them, and generate the procedural skills the proving-agents use.
 
 ## What lives in `knowledge_db/`
 
@@ -36,7 +36,7 @@ phds/
 ## Pipeline position
 
 ```
-distill/  →  knowledge_db/ (sorted by phds)  →  skill-creator  →  skill-regulator  →  skills/
+distill_mathematicians/  →  knowledge_db/ (sorted by phds)  →  skill-creator  →  skill-regulator  →  skills/
                   │                                                                     │
                   └────────────── proving-agents read on demand ───────────────────────┘
                                                                                         │

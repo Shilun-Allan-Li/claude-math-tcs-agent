@@ -1,24 +1,37 @@
-# prover_claude — Math Proof Assistant for Claude Code
+# claude_prover — Math Proof Assistant for Claude Code
 
 A multi-agent system for constructing rigorous mathematical proofs without hitting token limits.
 
 ## Installation
 
-Copy this directory as `.claude` in your project:
+The customer-facing surface is `claude_prover/`, but it depends on the engineer (compute service) and the intern (file housekeeping) to function end-to-end. Copy all three plus the deterministic hooks into your target project's `.claude/` tree:
 
 ```bash
-cp -r prover_claude /path/to/your/project/.claude
-cd /path/to/your/project
-claude   # or: claude .
+PROJECT=/path/to/your/project
+mkdir -p $PROJECT/.claude/agents $PROJECT/.claude/commands $PROJECT/.claude/hooks
+
+# 1. Customer-facing prover surface
+cp claude_prover/CLAUDE.md $PROJECT/.claude/CLAUDE.md
+cp claude_prover/agents/*  $PROJECT/.claude/agents/
+cp claude_prover/commands/* $PROJECT/.claude/commands/
+
+# 2. Engineer (compute service the prover and explorer dispatch via Task)
+cp engineers/agents/engineer.md $PROJECT/.claude/agents/
+cp engineers/commands/engineer.md $PROJECT/.claude/commands/
+cp -r engineers/lib $PROJECT/.claude/engineer_lib   # the audit harness
+
+# 3. Intern (proof/ tree housekeeping after outline edits)
+cp interns/agents/intern.md $PROJECT/.claude/agents/
+cp interns/commands/intern.md $PROJECT/.claude/commands/
+cp .claude/hooks/*.py $PROJECT/.claude/hooks/
+
+# 4. Settings (hooks must be registered)
+# Merge .claude/settings.local.json hooks block into $PROJECT/.claude/settings.local.json
 ```
 
-Or if you already have a `.claude` directory, merge selectively:
+Then `cd $PROJECT && claude .`.
 
-```bash
-cp -r prover_claude/agents/* /path/to/your/project/.claude/agents/
-cp -r prover_claude/commands/* /path/to/your/project/.claude/commands/
-# Merge CLAUDE.md contents manually into your existing .claude/CLAUDE.md
-```
+If you only want the prover and skip computation/housekeeping, install (1) alone — the prover degrades gracefully (no engineer = no computational delegation; no intern = manual `proof/` cleanup).
 
 ## What's Included
 

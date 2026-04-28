@@ -56,6 +56,8 @@ Print the returned path. If assembly fails (e.g. missing step files), surface th
 python3 -m claude_prover.lib.cli archive
 ```
 
+The archive operation moves the entire current `proof/` contents — `OUTLINE.md`, every `step_NN.md`, `exploration.md`, every `review_*.md`, `assembled.md` if present — into `proof/archive/<timestamp>/`. Nothing is deleted; `proof/` is left empty (apart from `archive/`) so the next `/prove` starts clean.
+
 It prints the archive directory (e.g. `proof/archive/20260417-134016`). Confirm: "Previous proof archived to <dest>. Run `/prove "<theorem>"` to start a new one."
 
 $ARGUMENTS

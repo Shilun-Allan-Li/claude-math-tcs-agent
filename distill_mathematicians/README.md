@@ -1,4 +1,4 @@
-# distill/
+# distill_mathematicians/
 
 Multi-agent backend that reads raw mathematician corpora and produces distilled packs. Output flows to `phds/knowledge_db/`, never directly to `skills/`.
 
@@ -14,9 +14,10 @@ Why not one size fits all: a single modern paper-author gives too little signal 
 ## Layout
 
 ```
-distill/
+distill_mathematicians/
   agents/          # multi-agent specs that drive distillation
                    #   arxiv-collector.md, github-curator.md, corpus-collector.md
+                   #   extractor.md (per-source extraction pass)
                    #   orchestrator.md (runs the pipeline end-to-end)
   sources/         # raw corpus material, the input
     heuristic_mind/                # individual-pack sources, per mathematician

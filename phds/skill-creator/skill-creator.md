@@ -89,7 +89,7 @@ Skills use a three-level loading system to manage context efficiently:
 This document supports two skill-authoring contexts:
 
 1. **Generic** — user-driven, examples-first. The Anthropic flow in `## Skill Creation Process` below. Use when a user is hand-specifying a skill from scratch.
-2. **phds context** — pipeline-driven. The input is a distilled pack already sitting in `phds/knowledge_db/`, produced upstream by `distill/`. Use when the organizer is converting curated knowledge into a capability multiplier.
+2. **phds context** — pipeline-driven. The input is a distilled pack already sitting in `phds/knowledge_db/`, produced upstream by `distill_mathematicians/`. Use when the organizer is converting curated knowledge into a capability multiplier.
 
 **When operating in phds context, this section's rules take precedence over the generic flow.** The generic Steps 1–6 still apply, but with the adaptations below.
 
@@ -100,17 +100,29 @@ The organizer reads from `phds/knowledge_db/`:
 - `individuals/<surname>.md` — heuristic-mind packs distilled from a single mathematician.
 - `batches/<vertical>-<window>.md` — domain-playbook packs distilled from a domain slice.
 
-These packs already conform to `distill/reference/extraction-framework.md` — every `INCLUDE` rule has been gate-tested for recurrence, predictive power, and exclusivity. The organizer does not re-litigate those gates; it applies a different one.
+These packs already conform to `distill_mathematicians/reference/extraction-framework.md` — every `INCLUDE` rule has been gate-tested for recurrence, predictive power, and exclusivity. The organizer does not re-litigate those gates; it applies a different one.
 
 ### The capability-multiplier test
 
-A pack-rule earns a skill slot only if it passes:
+A pack-rule earns a skill slot only if it passes **two** linked checks.
 
-> If a proving-agent reads this skill before tackling an in-scope problem, would it behave measurably differently — pick a different first move, reach for a different tool, write the proof in a different shape — than a vanilla Claude would?
+**Check 1 — Behavior delta.** If a proving-agent reads this skill before tackling an in-scope problem, would it behave measurably differently — pick a different first move, reach for a different tool, write the proof in a different shape — than a vanilla Claude would?
 
 If the honest answer is "Claude already does this" or "this is just a definition," the rule does **not** become a skill. It stays in `knowledge_db/` as the phds' working memory and is read on demand.
 
-This test is **stricter** than the framework's three gates. The framework asks "is this a real pattern in the source?" The capability-multiplier test asks "does Claude need this *added*?" Many real patterns don't need to be added — Claude already has them.
+**Check 2 — Transformer-failure-mode mapping.** Identify which failure mode of transformer-style next-token computation this skill compensates for. The taxonomy is in `skills/README.md`:
+
+1. Computation offload (when to dispatch the engineer instead of computing in-token)
+2. External memory / scratchpad discipline (how to use OUTLINE.md, step files, exploration.md)
+3. Route-selection overrides (overriding the most-frequent-pattern default with the most-appropriate one)
+4. Hypothesis-check rituals (structural pause points before theorem invocation)
+5. Anti-hallucination scaffolds (verb-dispatch instead of improvised citations / numbers)
+6. Search-tree pruning prompts (breadth checks before committing to a depth-first route)
+7. Compression / decompression discipline (when to cite-by-name vs. expand)
+
+A draft must declare its failure-mode bucket explicitly. A draft that fits no bucket is rejected, not revised — the underlying pack-rule may be a real pattern, but it is not a skill in this system.
+
+This is **stricter** than the framework's three gates. The framework asks "is this a real pattern in the source?" The capability-multiplier test asks "does *this kind of learner* need this *added*?" The model is a probabilistic token predictor, not a human mathematician — copy that framing into the test, not human-pedagogy intuitions.
 
 ### Skill output categories
 
@@ -186,22 +198,14 @@ At this point, it is time to actually create the skill.
 
 Skip this step only if the skill being developed already exists, and iteration or packaging is needed. In this case, continue to the next step.
 
-When creating a new skill from scratch, always run the `init_skill.py` script. The script conveniently generates a new template skill directory that automatically includes everything a skill requires, making the skill creation process much more efficient and reliable.
+Two valid shapes:
 
-Usage:
+- **Single-file skill** — `skills/<category>/<skill-name>.md`. Frontmatter at top: `name`, `description`. Body in imperative form. Use this when the skill is purely procedural and needs no bundled resources.
+- **Full-package skill** — `skills/<category>/<skill-name>/SKILL.md` plus optional `scripts/`, `references/`, `assets/` subdirs. Use when the skill needs bundled scripts, reference docs, or templates.
 
-```bash
-scripts/init_skill.py <skill-name> --path <output-directory>
-```
+Author drafts at `phds/skill-creator/drafts/<skill-name>(.md|/)`. The regulator promotes from `drafts/` into `skills/<category>/`.
 
-The script:
-
-- Creates the skill directory at the specified path
-- Generates a SKILL.md template with proper frontmatter and TODO placeholders
-- Creates example resource directories: `scripts/`, `references/`, and `assets/`
-- Adds example files in each directory that can be customized or deleted
-
-After initialization, customize or remove the generated SKILL.md and example files as needed.
+Categories that already exist or are sanctioned for first use: `styles/`, `techniques/`, `attacks/`. Do not pre-create empty category folders; create one when the first skill in it is promoted.
 
 ### Step 4: Edit the Skill
 
@@ -223,31 +227,14 @@ To complete SKILL.md, answer the following questions:
 2. When should the skill be used?
 3. In practice, how should Claude use the skill? All reusable skill contents developed above should be referenced so that Claude knows how to use them.
 
-### Step 5: Packaging a Skill
+### Step 5: Hand to the regulator
 
-Once the skill is ready, it should be packaged into a distributable zip file that gets shared with the user. The packaging process automatically validates the skill first to ensure it meets all requirements:
+This repo does not package skills as zip files; skills ship as plain markdown (or directories) under `skills/`. When the draft is ready:
 
-```bash
-scripts/package_skill.py <path/to/skill-folder>
-```
+1. Save it under `phds/skill-creator/drafts/<skill-name>(.md|/)`.
+2. Hand off to `phds/skill-regulator/`. The regulator runs the promotion gates in `skill-regulator.md` and either PROMOTES (moves to `skills/<category>/`), REVISES (returns with rationale appended), or REJECTS (moves to `phds/skill-creator/rejected/`).
 
-Optional output directory specification:
-
-```bash
-scripts/package_skill.py <path/to/skill-folder> ./dist
-```
-
-The packaging script will:
-
-1. **Validate** the skill automatically, checking:
-   - YAML frontmatter format and required fields
-   - Skill naming conventions and directory structure
-   - Description completeness and quality
-   - File organization and resource references
-
-2. **Package** the skill if validation passes, creating a zip file named after the skill (e.g., `my-skill.zip`) that includes all files and maintains the proper directory structure for distribution.
-
-If validation fails, the script will report the errors and exit without creating a package. Fix any validation errors and run the packaging command again.
+Self-check before handoff: run the mechanical checks listed under `## Verification` below. If any fail, fix the underlying issue rather than papering over the check — most check failures indicate the rule did not pass the capability-multiplier test.
 
 ### Step 6: Iterate
 

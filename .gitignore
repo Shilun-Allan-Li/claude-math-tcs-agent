@@ -16,3 +16,6 @@ build/
 # Local Claude config
 .claude/settings.local.json
 .claude/settings.json
+
+# Engineer runtime artifacts
+engineering/artifacts/

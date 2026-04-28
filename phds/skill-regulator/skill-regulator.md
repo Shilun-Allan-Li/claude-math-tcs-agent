@@ -29,15 +29,17 @@ A draft promotes only if **all** gates pass. Each gate's failure routes to `REVI
 
 ### Gate 1 — Capability-multiplier (REJECT if fails)
 
-Apply the test from `phds/skill-creator/skill-generator.md` §"The capability-multiplier test":
+Apply the **two-check test** from `phds/skill-creator/skill-creator.md` §"The capability-multiplier test":
 
-> If a proving-agent reads this skill before tackling an in-scope problem, would it behave measurably differently than a vanilla Claude would?
+1. **Behavior delta** — would a proving-agent loaded with this skill behave measurably differently than a vanilla Claude on an in-scope problem?
+2. **Transformer-failure-mode mapping** — does the draft explicitly map to one of the seven failure-mode buckets in `skills/README.md`?
 
 Failure modes:
 
 - Skill restates a definition Claude already has from training → REJECT.
 - Skill repeats generic advice ("be rigorous", "check assumptions") → REJECT.
 - Skill is operational but trivially derivable from the problem statement → REJECT.
+- Skill describes a real human-mathematician habit but doesn't map to a transformer failure mode → REJECT (the rule may belong in `knowledge_db/` as reference material; not in `skills/`).
 
 This gate is binary. A skill that fails it should not be revised; it should never have been authored. The rationale on REJECT helps skill-creator avoid the same shape next time.
 
@@ -68,7 +70,7 @@ If an existing skill addresses the same pattern:
 
 ### Gate 6 — Verification (REVISE if fails)
 
-Run the mechanical checks in `phds/skill-creator/skill-generator.md` §Verification. Any failure → REVISE.
+Run the mechanical checks in `phds/skill-creator/skill-creator.md` §Verification. Any failure → REVISE.
 
 ## Audit signals (mode 2)
 
@@ -98,7 +100,7 @@ The regulator's standing bias is **fewer, sharper skills**.
 ## What the regulator does NOT do
 
 - Does not author skills. That's skill-creator's job. If a draft fails a gate, the regulator routes it back; it does not edit in place.
-- Does not rewrite `knowledge_db/` packs. If the underlying pack is wrong, the issue is upstream in `distill/`; the regulator surfaces the problem but does not patch downstream artifacts.
+- Does not rewrite `knowledge_db/` packs. If the underlying pack is wrong, the issue is upstream in `distill_mathematicians/`; the regulator surfaces the problem but does not patch downstream artifacts.
 - Does not auto-promote on partial gate-pass. All gates are required.
 - Does not touch `claude_prover/`. Same rule as everywhere else in the backend.
 

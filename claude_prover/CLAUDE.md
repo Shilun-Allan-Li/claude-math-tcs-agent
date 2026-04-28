@@ -9,16 +9,22 @@ Proofs are broken into small, manageable steps. Each step is worked on independe
 ## Directory Layout (created at runtime)
 
 ```
-proof/
+proof/                 ← owned by orchestrator + prover + reviewer; reset by /prove --reset
   OUTLINE.md          ← Master TODO list with all proof steps
   step_01.md          ← Completed proof step 1
   step_02.md          ← Completed proof step 2
   ...
-  exploration.md      ← Ideas, failed attempts, strategy notes
+  exploration.md      ← Ideas, failed attempts, strategy notes (explorer-owned)
   assembled.md        ← Final assembled proof (when complete)
-papers/
+  review_step_NN.md   ← Reviewer output per step (reviewer-owned)
+  review_assembled.md ← Reviewer output for assembled proof
+  archive/<ts>/       ← Snapshots from /prove --reset and intern reconciliation
+  .intern_inbox/      ← Hook→intern message bus (orphans.json, reconciliation reports)
+papers/                ← Owned by formatter (writes) and prover/explorer (read-only)
   <name>.md           ← Formatted versions of source papers
 ```
+
+`/prove --reset` archives the entire `proof/` contents (OUTLINE, every step, exploration.md, every review_*.md, assembled.md) into `proof/archive/<timestamp>/`. `papers/` is not reset — formatted papers persist across proofs.
 
 ## Available Agents
 
@@ -52,6 +58,14 @@ papers/
 7. `/proof-step review` — reviewer checks the assembled proof
 
 If stuck at any step: `/explore "why X implies Y"` — explorer logs strategies to `proof/exploration.md`
+
+## Subagent dispatch
+
+All inter-agent calls in this system go through the **Task tool**. The orchestrator dispatches the prover, explorer, reviewer, formatter, and the intern via Task. The prover and explorer dispatch the engineer (`engineers/agents/engineer.md`) via Task for any computation, search, or extraction. Slash commands like `/proof-step` and `/engineer` are user-facing entry points; agent-to-agent dispatch is always Task.
+
+## Review-result loop
+
+When a reviewer turn produces `proof/review_step_NN.md` or `proof/review_assembled.md` with verdict `NEEDS REVISION` or `FAIL`, the orchestrator surfaces the issue and **asks the user** before re-dispatching the prover. The user always has the final call on whether to re-prove. See `agents/proof-orchestrator.md` § "Review-result loop" for the protocol.
 
 ## Token-Budget Discipline
 
