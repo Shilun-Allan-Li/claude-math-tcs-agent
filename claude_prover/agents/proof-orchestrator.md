@@ -73,25 +73,6 @@ Read files in order. For each step file:
 
 Save to `proof/assembled.md` and print: "Assembly complete. Review with `/proof-step review`."
 
-## Review-result loop
+## Handling review feedback
 
-After a reviewer turn, scan `proof/` for `review_step*.md` and `review_assembled.md` files newer than the corresponding step file. For each review whose verdict is `NEEDS REVISION` or `FAIL`:
-
-1. Surface the issue to the user verbatim (one block per affected step): step number, verdict, and the review's "Critical" issues.
-2. Offer a re-prove: "Step N flagged by reviewer. Re-run via `/proof-step N` to revise? (y / skip)".
-3. If the user confirms, dispatch the `proof-prover` subagent (via the Task tool) on that step, instructing it to read `proof/review_step_NN.md` first and address every Critical issue. Mark the step `[ ]` again in OUTLINE.md so the re-prove is tracked.
-4. If the user declines, leave OUTLINE.md alone and note the deferred review under "Open Questions / Blockers".
-
-The user always has the final call on whether to re-prove. The orchestrator never silently re-dispatches.
-
-## Inbox check (before any planning or assembly turn)
-
-At the start of every turn, glance at `proof/.intern_inbox/orphans.json`. This file is written by the deterministic `outline_diff.py` hook when the user has edited `proof/OUTLINE.md` in a way that leaves step files orphaned (step number no longer in outline).
-
-If the file exists and its `orphans` array is non-empty, dispatch the `intern` subagent with this single message:
-
-> "Reconcile proof/.intern_inbox/orphans.json. Move orphans to proof/archive/<ts>/orphaned/, write the reconciliation report, clear the inbox."
-
-Wait for the intern to finish before continuing your own work. Surface its one-line summary to the user. Do not attempt to write math or assemble until the inbox is clear.
-
-If `orphans.json` flags any file as `flag-renumber`, that is your signal to consider whether `OUTLINE.md` and the surviving step files need a renumbering pass — the intern never renumbers. If a renumber is correct, do it as part of your normal outline maintenance.
+If a reviewer wrote `proof/review_step_NN.md` or `proof/review_assembled.md` with verdict `NEEDS REVISION` or `FAIL`, surface the critical issues to the user. If they want a re-prove, dispatch `proof-prover` on that step and instruct it to read the review file first.

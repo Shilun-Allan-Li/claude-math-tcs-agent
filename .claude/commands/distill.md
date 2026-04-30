@@ -1,0 +1,1 @@
+../../distill_mathematicians/commands/distill.md

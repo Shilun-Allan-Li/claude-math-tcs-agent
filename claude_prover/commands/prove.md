@@ -9,55 +9,17 @@ Start or manage a mathematical proof.
 
 ## Instructions
 
-Read the argument after this command. It is either `--assemble`, `--reset`, or a theorem statement.
-
----
+Read the argument after this command.
 
 **Theorem statement (or no flag):**
 
-1. Check whether a proof is already in progress:
+1. If `proof/OUTLINE.md` exists, ask the user whether to (a) continue, (b) `--reset`, or (c) cancel.
+2. Dispatch the `proof-explorer` agent to brainstorm strategies and append findings to `proof/exploration.md`.
+3. Dispatch the `proof-orchestrator` agent to write `proof/OUTLINE.md` based on the exploration.
+4. Print the new outline.
 
-   ```
-   python3 -m claude_prover.lib.cli status
-   ```
+**`--assemble`:** Dispatch `proof-orchestrator` to read every `proof/step_NN.md` in order and write `proof/assembled.md`.
 
-   If the output is **not** `No proof in progress.`, ask the user whether to (a) continue, (b) archive and start fresh (`--reset`), or (c) cancel.
-
-2. If starting fresh:
-   - Delegate to the `proof-explorer` agent first: "Explore proof strategies for the theorem below. Append findings to `proof/exploration.md`. Theorem: <theorem>."
-   - Then delegate to the `proof-orchestrator` agent: "Plan the proof of the theorem below using the exploration findings in `proof/exploration.md`. Decompose into steps no larger than ~500 words each. When the plan is ready, write it by calling:
-
-     `python3 -m claude_prover.lib.cli outline-init <title> <strategy> <desc1> <desc2> ...`
-
-     Then print the new outline. Theorem: <theorem>."
-
-3. Print the outline and next-step suggestion:
-
-   ```
-   python3 -m claude_prover.lib.cli outline
-   python3 -m claude_prover.lib.cli status
-   ```
-
----
-
-**`--assemble`:**
-
-```
-python3 -m claude_prover.lib.cli assemble
-```
-
-Print the returned path. If assembly fails (e.g. missing step files), surface the error. Optionally delegate to `proof-orchestrator` to polish transitions between steps — the mechanical concatenation is already done.
-
----
-
-**`--reset`:**
-
-```
-python3 -m claude_prover.lib.cli archive
-```
-
-The archive operation moves the entire current `proof/` contents — `OUTLINE.md`, every `step_NN.md`, `exploration.md`, every `review_*.md`, `assembled.md` if present — into `proof/archive/<timestamp>/`. Nothing is deleted; `proof/` is left empty (apart from `archive/`) so the next `/prove` starts clean.
-
-It prints the archive directory (e.g. `proof/archive/20260417-134016`). Confirm: "Previous proof archived to <dest>. Run `/prove "<theorem>"` to start a new one."
+**`--reset`:** Run `python3 -m claude_prover.lib.cli archive`. Print the archive directory.
 
 $ARGUMENTS

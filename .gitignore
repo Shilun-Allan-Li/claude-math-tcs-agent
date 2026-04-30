@@ -17,5 +17,14 @@ build/
 .claude/settings.local.json
 .claude/settings.json
 
-# Engineer runtime artifacts
-engineering/artifacts/
+# Engineer runtime scratch
+engineering/
+
+# Proof runtime artifacts (per-user proof work, not source-of-truth)
+proof/
+papers/
+
+# Distillation runtime — manifest, fetched sources, distilled outputs
+distill_mathematicians/manifest.json
+distill_mathematicians/sources/
+distill_mathematicians/distilled/

@@ -1,0 +1,1 @@
+../../claude_prover/commands/proof-outline.md

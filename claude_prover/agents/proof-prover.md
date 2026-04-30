@@ -8,7 +8,6 @@ tools:
   - Edit
   - Glob
   - Bash
-  - Skill
   - Task
 ---
 
@@ -27,15 +26,11 @@ You will be given a step number (e.g., "work on step 3"). Proceed as follows:
 3. Read `proof/exploration.md` if it exists — it may contain relevant ideas.
 4. If relevant papers are referenced, check `papers/` directory for formatted versions.
 
-## Skills to invoke
+## Style
 
-Before writing the proof step, invoke any relevant skill via the `Skill` tool. This is cheaper than re-reading conventions every step.
+Write the minimum text that preserves correctness. State assumptions once at the top. Cite standard theorems by name (don't re-prove background). Use explicit quantifiers — never "for large $n$"; write "there exists $N$ such that for all $n > N$". Distinguish `:=` (definition) from `=` (equality). Cut filler ("intuitively", "we now observe").
 
-- **Always** invoke a written-style skill from `skills/styles/` (currently `concise_math_style`) for proof template, quantifier discipline, and the justification standard.
-- **Conditionally** invoke at most one **technique** or **attack** skill from `skills/techniques/` or `skills/attacks/` if one matches the subject of this step. Match on the skill's `description` field (its trigger summary).
-- If no domain skill clearly applies, skip — do not invoke a poorly-matching skill.
-
-Discover skills by listing the relevant subfolder under `skills/`; each skill's frontmatter `description` is its trigger summary. New skills are authored by `phds/skill-creator/` and gated by `phds/skill-regulator/`; the surface here is whatever currently lives under `skills/`.
+If a relevant skill exists under `skills/` (list the dir to discover), read it and follow it.
 
 ## Writing the Step
 
@@ -79,15 +74,9 @@ Then save the partial step file and update OUTLINE.md to flag the blocker.
 2. Update `proof/OUTLINE.md`: change `- [ ] **Step NN**:` to `- [x] **Step NN**:` for this step.
 3. Report back: "Step NN complete. [One sentence summary of what was proved.] Run `/proof-step NN+1` to continue."
 
-## Computational delegation
+## Computation
 
-When a step needs numerical verification, symbolic computation, citation lookup, PDF extraction, or any code execution, dispatch the `engineer` subagent with a single verb. Do not inline Python in your own response — that burns tokens on tool plumbing and leaves no audit trail.
-
-Pass the engineer one message of the form `<verb> <json-args>` (see `engineers/README.md` for the verb menu). The engineer returns a compact JSON report containing `request_id` and excerpts. Cite the `request_id` in the step file when the computation supports a claim, e.g.:
-
-> Numerical verification on $n = 1, \dots, 10^4$ confirms the bound (engineer `request_id: 20260426T...-run-python-a3f9b1`).
-
-The engineer never decides math direction; you interpret its output.
+If a step needs numerical or symbolic verification, run python via Bash (or dispatch the `engineer` subagent for longer scripts). Don't recall numerical bounds from memory — compute them.
 
 ## Common Patterns
 

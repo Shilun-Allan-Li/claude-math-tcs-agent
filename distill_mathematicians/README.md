@@ -1,43 +1,79 @@
-# distill_mathematicians/
+# distill_mathematicians
 
-Multi-agent backend that reads raw mathematician corpora and produces distilled packs. Output flows to `phds/knowledge_db/`, never directly to `skills/`.
+The single source of how skills are generated.
 
-## Two kinds of pack
+## Pipeline
 
-The right unit of distillation depends on how much signal the source offers. Two modes, same template family.
+```
+collect.py   →   manifest.json   →   distiller agent   →   distilled/<id>.md   →   skill-creator agent   →   skills/<category>/<name>.md
+   ↑                                       ↑                                            ↑
+   one script                              one agent                                    one agent
+   (arxiv API + great-mathematician        (extracts operational                        (writes one skill if a pattern
+    registry)                                heuristics from one source)                 passes the capability-multiplier test)
+```
 
-- **Individual pack** — for great mathematicians whose corpus is large and whose style is canonical (Euler, Gauss, Riemann, Erdős, Grothendieck, …). Captures the **heuristic mind**: what they notice first, what they reach for, when they abandon a route. The person *is* the stable unit.
-- **Batch pack** — for modern research, where any single paper-author is too noisy. The stable unit is 5–15 active authors in the same domain slice (e.g. "additive combinatorics, 2015–2025"). Captures the **domain playbook** — what those authors *share*.
-
-Why not one size fits all: a single modern paper-author gives too little signal to isolate personal style from domain convention; distillation picks up noise. A single ancient great gives enough — the corpus is huge and the voice is documented.
+`run.py` is the queue manager — it reads `manifest.json` + `distilled/`, prints what's pending. The user steps the pipeline forward with `/distill`.
 
 ## Layout
 
 ```
 distill_mathematicians/
-  agents/          # multi-agent specs that drive distillation
-                   #   arxiv-collector.md, github-curator.md, corpus-collector.md
-                   #   extractor.md (per-source extraction pass)
-                   #   orchestrator.md (runs the pipeline end-to-end)
-  sources/         # raw corpus material, the input
-    heuristic_mind/                # individual-pack sources, per mathematician
-      euler/  gauss/  riemann/  grothendieck/  erdos/  ...
-    batches/                       # batch-pack sources
-      CATALOG.md                     # MSC + arXiv index of recognized verticals
-      math/<vertical>/               # 12 verticals (linear-algebra, number-theory, …)
-      tcs/<vertical>/                # 9 verticals (algorithms, complexity-theory, …)
-  templates/       # shape contracts for distilled output
-    individual-template.md       # heuristic-mind pack
-    batch-template.md            # domain-playbook pack
-  reference/       # methodology notes for the distillers
-    extraction-framework.md
   README.md
+  manifest.json              ← the queue (gitignored)
+  agents/
+    distiller.md             ← reads one source → distilled/<id>.md
+    skill-creator.md         ← reads one distilled file → at most one skill
+  commands/
+    distill.md               ← /distill — step the pipeline
+  lib/
+    collect.py               ← arxiv API + great-mathematician registry → manifest entries
+    run.py                   ← queue manager
+  sources/                   ← gitignored — local cache of fetched papers
+    arxiv/
+    great_mathematicians/
+  distilled/                 ← gitignored — distiller outputs
 ```
 
-## Pipeline position
+## Two source kinds, one taxonomy
 
-```
-sources/  →  agents/ (multi-agent run)  →  pack  →  phds/knowledge_db/
+Both modern arxiv papers and historical great-mathematician corpora are tagged with **arxiv categories** (`math.NT`, `cs.CC`, `math.HO`, etc.). One taxonomy, one queue, one distiller.
+
+- **arxiv** — recent papers, pulled live from the arxiv API.
+- **great** — canonical corpora of historical mathematicians (Euler, Gauss, Riemann, Erdős, Grothendieck). The registry in `collect.py` maps surname → list of canonical URLs + tags.
+
+## Collecting
+
+```bash
+# Add 10 recent papers from numerical analysis to the manifest
+python3 -m distill_mathematicians.lib.collect arxiv math.NA --n 10
+
+# Add Euler's corpus to the manifest
+python3 -m distill_mathematicians.lib.collect great euler
+
+# See what's available
+python3 -m distill_mathematicians.lib.collect list-categories
 ```
 
-A finished pack is *not* a skill. It enters the knowledge DB and waits for a phd to decide whether any of it should be promoted into `skills/`.
+`collect.py` is idempotent on `(kind, id)` — re-running merges, doesn't duplicate.
+
+## Stepping the pipeline
+
+```bash
+# See the queue
+python3 -m distill_mathematicians.lib.run
+
+# Step forward (in claude)
+/distill              # auto-pick the next pending item
+/distill 2401.12345   # distill this specific source
+/distill skill euler-collected_works   # create a skill from this distilled file
+```
+
+## Adding a new great mathematician
+
+Edit `REGISTRY` in `collect.py`. Each entry needs `title`, `url`, `kind_detail`, and `tags` (arxiv-style). No code changes elsewhere.
+
+## Why this is so simple
+
+The previous backend had collector agents, an extraction framework with three gates, an orchestrator, an extractor, an intake phase, a merge phase, a pack-write phase, and a regulator with a promotion log. None of it had ever produced a real pack.
+
+This version is one script + two agents + one queue manager. If a skill turns out badly, you delete it. If you want a regulator, add it later.

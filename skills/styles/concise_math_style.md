@@ -1,79 +1,22 @@
-Reference note for writing mathematically rigorous content with high information density and low token waste.
+# Concise math style
 
-# Agent behavior
-Each agent should do this once:
-- read concise-math-style.md
-- extract the top 3 rules relevant to its role
-- write them into its own working memory / contract / runtime state
-- stop rereading unless the file changes
+Procedural patches for writing rigorous math without burning tokens.
 
-## Core principle
+## Rules
 
-Write the **minimum text that preserves correctness**.
+1. **State assumptions once.** Put hypotheses at the top, then reuse them. Don't repeat "since $A$ is symmetric" in every paragraph.
+2. **Cite theorems by name.** Don't re-prove background. "By rank-nullity, …" beats re-deriving rank-nullity.
+3. **Separate idea from execution.** Use `**Idea.**` (1–2 lines) and `**Proof.**` (the derivation). Don't mix brainstorming into the final proof.
+4. **Explicit quantifiers.** Never "for large $n$" — write "there exists $N$ such that for all $n > N$".
+5. **`:=` vs `=`.** Use `:=` for definitions, `=` for equalities. Always.
+6. **Lemma-sized chunks.** For long arguments: setup → claim → key identity → conclusion. Multiple short blocks beat one paragraph.
+7. **Cut filler.** Drop "intuitively", "we now observe that", "it is worth noting" unless they add reasoning.
+8. **Don't restate fixed notation.** Once defined, reuse directly.
 
-Do **not** optimize for shortest possible output.  
-Optimize for:
-- correct hypotheses
-- explicit theorem use
-- no repeated setup
-- no filler
-- high information per line
+## Failure mode bucket
 
-## Compression rules
+Compression / decompression discipline (skills/README.md taxonomy item 7).
 
-### 1. State assumptions once
-Put hypotheses at the top, then reuse them.
+## Consumers
 
-Good:
-- “Let \(A \in \mathbb R^{n\times n}\) be symmetric.”
-
-Bad:
-- repeating “since \(A\) is symmetric” in every paragraph unless the reminder matters
-
-### 2. Name the theorem instead of re-proving background
-If a standard result is being used, cite it by name unless the proof is the point.
-
-Good:
-- “By rank-nullity, \(\dim V=\dim\ker T+\dim\operatorname{im}T\).”
-
-Bad:
-- re-deriving rank-nullity in a proof that is not about rank-nullity
-
-### 3. Separate proof idea from proof execution
-Do not mix brainstorming and final proof.
-
-Use:
-- **Idea:** one or two lines
-- **Proof:** the actual derivation
-
-This avoids repeated explanation.
-
-### 4. Use mathematical notation when it compresses cleanly
-Prefer symbols when they replace long prose unambiguously.
-
-Good:
-- “For all \(x\in X\), \(f_n(x)\to f(x)\) a.e.”
-- “Assume \(n\ge 2\).”
-
-Bad:
-- symbolic clutter that is denser but less readable
-
-### 5. Use lemma-sized chunks
-Break long proofs into:
-- setup
-- claim
-- key identity
-- conclusion
-
-This is shorter and clearer than one large paragraph.
-
-### 6. Avoid motivational filler in runtime outputs
-Cut phrases like:
-- “intuitively speaking”
-- “we now observe that”
-- “it is worth noting that”
-unless they add actual reasoning value
-
-### 7. Do not restate notation already fixed
-Once notation is defined, reuse it directly.
-
+`proof-prover` (writing steps), `proof-reviewer` (auditing for overcompression and missing quantifiers), `proof-formatter` (stripping filler when cleaning LaTeX).
