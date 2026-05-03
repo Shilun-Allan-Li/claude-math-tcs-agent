@@ -1,0 +1,248 @@
+{
+  "entries": [
+    {
+      "kind": "great",
+      "id": "cook-paper",
+      "surname": "cook",
+      "title": "The Complexity of Theorem-Proving Procedures (1971)",
+      "url": "https://www.cs.toronto.edu/~sacook/homepage/1971.pdf",
+      "kind_detail": "paper",
+      "tags": [
+        "cs.CC"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "erdos-papers",
+      "surname": "erdos",
+      "title": "Erd\u0151s papers (R\u00e9nyi Institute archive)",
+      "url": "https://users.renyi.hu/~p_erdos/",
+      "kind_detail": "papers",
+      "tags": [
+        "math.CO",
+        "math.NT"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "euler-collected_works",
+      "surname": "euler",
+      "title": "Opera Omnia (Euler Archive)",
+      "url": "https://eulerarchive.maa.org/",
+      "kind_detail": "collected_works",
+      "tags": [
+        "math.HO",
+        "math.NT",
+        "math.CA"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "gauss-book",
+      "surname": "gauss",
+      "title": "Disquisitiones Arithmeticae (English translation)",
+      "url": "https://archive.org/details/disquisitionesar0000carl",
+      "kind_detail": "book",
+      "tags": [
+        "math.NT"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "gauss-collected_works",
+      "surname": "gauss",
+      "title": "Werke (archive.org Gesammelte Werke vol. 1)",
+      "url": "https://archive.org/details/werkecarlf01gausrich",
+      "kind_detail": "collected_works",
+      "tags": [
+        "math.HO",
+        "math.NT",
+        "math.AG"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "grothendieck-papers",
+      "surname": "grothendieck",
+      "title": "Grothendieck publications (numdam)",
+      "url": "https://www.numdam.org/",
+      "kind_detail": "papers",
+      "tags": [
+        "math.AG",
+        "math.CT"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "hardy-collected_works",
+      "surname": "hardy",
+      "title": "Collected Papers of G. H. Hardy",
+      "url": "https://archive.org/details/collectedpapersh0000hard",
+      "kind_detail": "collected_works",
+      "tags": [
+        "math.NT",
+        "math.CA"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "hilbert-collected_works",
+      "surname": "hilbert",
+      "title": "Gesammelte Abhandlungen (vol. 1, archive.org)",
+      "url": "https://archive.org/details/gesammelteabhand01hilb",
+      "kind_detail": "collected_works",
+      "tags": [
+        "math.NT",
+        "math.AG",
+        "math.AC",
+        "math.LO",
+        "math.AP"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "hoare-paper",
+      "surname": "hoare",
+      "title": "An Axiomatic Basis for Computer Programming (1969)",
+      "url": "https://www.cs.cmu.edu/~crary/819-f09/Hoare69.pdf",
+      "kind_detail": "paper",
+      "tags": [
+        "cs.LO",
+        "cs.DS"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "karp-paper",
+      "surname": "karp",
+      "title": "Reducibility Among Combinatorial Problems (1972)",
+      "url": "https://www.cs.berkeley.edu/~luca/cs172/karp.pdf",
+      "kind_detail": "paper",
+      "tags": [
+        "cs.CC",
+        "cs.DS"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "knuth-book_series",
+      "surname": "knuth",
+      "title": "The Art of Computer Programming (Knuth's TAOCP page)",
+      "url": "https://cs.stanford.edu/~knuth/taocp.html",
+      "kind_detail": "book_series",
+      "tags": [
+        "cs.DS"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "kolmogorov-selected_works",
+      "surname": "kolmogorov",
+      "title": "Selected Works of A. N. Kolmogorov",
+      "url": "https://archive.org/details/selectedworksofa0000kolm",
+      "kind_detail": "selected_works",
+      "tags": [
+        "math.PR",
+        "math.LO"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "noether-collected_works",
+      "surname": "noether",
+      "title": "Gesammelte Abhandlungen (Emmy Noether)",
+      "url": "https://archive.org/details/gesammelteabhand0000emmy",
+      "kind_detail": "collected_works",
+      "tags": [
+        "math.RA",
+        "math.AC"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "poincare-collected_works",
+      "surname": "poincare",
+      "title": "OEuvres de Henri Poincare (vol. 1)",
+      "url": "https://archive.org/details/oeuvresdehenripo01poin",
+      "kind_detail": "collected_works",
+      "tags": [
+        "math.AT",
+        "math.DG",
+        "math.DS"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "rabin-paper",
+      "surname": "rabin",
+      "title": "Probabilistic Algorithms (Rabin 1976)",
+      "url": "https://www.wisdom.weizmann.ac.il/~oded/PSBookFrag/rabin76.pdf",
+      "kind_detail": "paper",
+      "tags": [
+        "cs.DS",
+        "cs.CC"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "riemann-collected_works",
+      "surname": "riemann",
+      "title": "Gesammelte Mathematische Werke",
+      "url": "https://archive.org/details/gesammeltemathem0000bern",
+      "kind_detail": "collected_works",
+      "tags": [
+        "math.HO",
+        "math.CV",
+        "math.DG"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "shannon-paper",
+      "surname": "shannon",
+      "title": "A Mathematical Theory of Communication (1948)",
+      "url": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf",
+      "kind_detail": "paper",
+      "tags": [
+        "cs.IT",
+        "cs.CR"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "turing-paper",
+      "surname": "turing",
+      "title": "On Computable Numbers, with an Application to the Entscheidungsproblem (1936)",
+      "url": "https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf",
+      "kind_detail": "paper",
+      "tags": [
+        "cs.LO",
+        "cs.FL",
+        "cs.CC"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "valiant-paper",
+      "surname": "valiant",
+      "title": "A Theory of the Learnable (1984)",
+      "url": "https://web.mit.edu/6.435/www/Valiant84.pdf",
+      "kind_detail": "paper",
+      "tags": [
+        "cs.LG"
+      ]
+    },
+    {
+      "kind": "great",
+      "id": "yao-paper",
+      "surname": "yao",
+      "title": "Probabilistic Computations: Toward a Unified Measure of Complexity (1977)",
+      "url": "https://www.cs.princeton.edu/courses/archive/spring01/cs598a/papers/Yao77.pdf",
+      "kind_detail": "paper",
+      "tags": [
+        "cs.DS",
+        "cs.CC"
+      ]
+    }
+  ]
+}

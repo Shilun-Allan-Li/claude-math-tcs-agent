@@ -21,11 +21,11 @@ Step the distillation pipeline forward by one item.
 
 2. If a specific source id is given: dispatch the `distiller` agent:
 
-   > "Distill source `<source_id>`. Read `distill_mathematicians/manifest.json` for the entry, fetch the source, write findings to `distill_mathematicians/distilled/<source_id>.md`."
+   > "Distill source `<source_id>`. Read `distill_mathematicians/manifest.json` for the entry, fetch the source, route via `verticals.route(tags)` to pick the (area, vertical) folder, and write findings to `distill_mathematicians/distilled/<area>/<vertical>/<source_id>.md`."
 
-3. If `skill <id>` is given: dispatch the `skill-creator` agent:
+3. If `skill <id>` is given: locate the distilled file (it lives somewhere under `distill_mathematicians/distilled/`), then dispatch the `skill-creator` agent:
 
-   > "Read `distill_mathematicians/distilled/<id>.md`. If any pattern passes the capability-multiplier test, write one skill into `skills/<category>/<skill-slug>.md`. Otherwise print the no-skill verdict."
+   > "Read the distilled file for `<id>`. Branch on its `Kind` field: arxiv → write a vertical skill into `skills/<area>/<vertical>/`; great → write a soul fragment into `skills/souls/<id>.md` and update `config/soul.md`. Apply the capability-multiplier test first; if no pattern qualifies, print the no-skill verdict."
 
 4. **No argument (auto-step):** ask the queue for the next pending item:
    ```

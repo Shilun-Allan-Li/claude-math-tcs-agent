@@ -35,7 +35,9 @@ def _load_manifest() -> list[dict]:
 def _distilled_ids() -> set[str]:
     if not DISTILLED.exists():
         return set()
-    return {p.stem for p in DISTILLED.glob("*.md")}
+    # Distilled files live under distilled/<area>/<vertical>/<id>.md.
+    # rglob picks them up regardless of depth (also tolerates legacy flat layout).
+    return {p.stem for p in DISTILLED.rglob("*.md")}
 
 
 def _skilled_source_ids() -> set[str]:

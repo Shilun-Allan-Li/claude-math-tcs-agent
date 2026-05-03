@@ -66,6 +66,92 @@ REGISTRY = {
          "kind_detail": "papers",
          "tags": ["math.AG", "math.CT"]},
     ],
+    # --- Math greats covering remaining MSC verticals ---
+    "hilbert": [
+        {"title": "Gesammelte Abhandlungen (vol. 1, archive.org)",
+         "url": "https://archive.org/details/gesammelteabhand01hilb",
+         "kind_detail": "collected_works",
+         "tags": ["math.NT", "math.AG", "math.AC", "math.LO", "math.AP"]},
+    ],
+    "hardy": [
+        {"title": "Collected Papers of G. H. Hardy",
+         "url": "https://archive.org/details/collectedpapersh0000hard",
+         "kind_detail": "collected_works",
+         "tags": ["math.NT", "math.CA"]},
+    ],
+    "kolmogorov": [
+        {"title": "Selected Works of A. N. Kolmogorov",
+         "url": "https://archive.org/details/selectedworksofa0000kolm",
+         "kind_detail": "selected_works",
+         "tags": ["math.PR", "math.LO"]},
+    ],
+    "noether": [
+        {"title": "Gesammelte Abhandlungen (Emmy Noether)",
+         "url": "https://archive.org/details/gesammelteabhand0000emmy",
+         "kind_detail": "collected_works",
+         "tags": ["math.RA", "math.AC"]},
+    ],
+    "poincare": [
+        {"title": "OEuvres de Henri Poincare (vol. 1)",
+         "url": "https://archive.org/details/oeuvresdehenripo01poin",
+         "kind_detail": "collected_works",
+         "tags": ["math.AT", "math.DG", "math.DS"]},
+    ],
+    # --- TCS greats covering the 9 cs.* verticals ---
+    "turing": [
+        {"title": "On Computable Numbers, with an Application to the Entscheidungsproblem (1936)",
+         "url": "https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf",
+         "kind_detail": "paper",
+         "tags": ["cs.LO", "cs.FL", "cs.CC"]},
+    ],
+    "shannon": [
+        {"title": "A Mathematical Theory of Communication (1948)",
+         "url": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf",
+         "kind_detail": "paper",
+         "tags": ["cs.IT", "cs.CR"]},
+    ],
+    "knuth": [
+        {"title": "The Art of Computer Programming (Knuth's TAOCP page)",
+         "url": "https://cs.stanford.edu/~knuth/taocp.html",
+         "kind_detail": "book_series",
+         "tags": ["cs.DS"]},
+    ],
+    "hoare": [
+        {"title": "An Axiomatic Basis for Computer Programming (1969)",
+         "url": "https://www.cs.cmu.edu/~crary/819-f09/Hoare69.pdf",
+         "kind_detail": "paper",
+         "tags": ["cs.LO", "cs.DS"]},
+    ],
+    "karp": [
+        {"title": "Reducibility Among Combinatorial Problems (1972)",
+         "url": "https://www.cs.berkeley.edu/~luca/cs172/karp.pdf",
+         "kind_detail": "paper",
+         "tags": ["cs.CC", "cs.DS"]},
+    ],
+    "cook": [
+        {"title": "The Complexity of Theorem-Proving Procedures (1971)",
+         "url": "https://www.cs.toronto.edu/~sacook/homepage/1971.pdf",
+         "kind_detail": "paper",
+         "tags": ["cs.CC"]},
+    ],
+    "rabin": [
+        {"title": "Probabilistic Algorithms (Rabin 1976)",
+         "url": "https://www.wisdom.weizmann.ac.il/~oded/PSBookFrag/rabin76.pdf",
+         "kind_detail": "paper",
+         "tags": ["cs.DS", "cs.CC"]},
+    ],
+    "valiant": [
+        {"title": "A Theory of the Learnable (1984)",
+         "url": "https://web.mit.edu/6.435/www/Valiant84.pdf",
+         "kind_detail": "paper",
+         "tags": ["cs.LG"]},
+    ],
+    "yao": [
+        {"title": "Probabilistic Computations: Toward a Unified Measure of Complexity (1977)",
+         "url": "https://www.cs.princeton.edu/courses/archive/spring01/cs598a/papers/Yao77.pdf",
+         "kind_detail": "paper",
+         "tags": ["cs.DS", "cs.CC"]},
+    ],
 }
 
 

@@ -24,7 +24,9 @@ engineering/
 proof/
 papers/
 
-# Distillation runtime — manifest, fetched sources, distilled outputs
-distill_mathematicians/manifest.json
-distill_mathematicians/sources/
-distill_mathematicians/distilled/
+# Per-user generated config (regenerate with `python3 config/generate.py`)
+config/user.md
+config/soul.md
+config/agents.md
+config/tools.md
+

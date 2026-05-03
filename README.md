@@ -24,9 +24,10 @@ They share state through a `proof/` directory (outline + step files + exploratio
 
 ```
 claude_prover/             ← proof agent surface (agents, commands, lib)
-engineers/                 ← compute helper (engineer subagent + /engineer)
+engineers/                 ← compute helper 
 distill_mathematicians/    ← skill production: arxiv + great-mathematician → distiller → skill-creator
 skills/                    ← procedural patches the proof agents read at the point of need
+config/                    ← per-user config (generated locally; gitignored). `python3 config/generate.py`
 proof/                     ← runtime: OUTLINE + step files + reviews + assembled proof
 papers/                    ← runtime: formatted reference papers
 .claude/                   ← live install (agents/commands are per-file symlinks)

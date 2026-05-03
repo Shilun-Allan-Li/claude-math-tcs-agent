@@ -5,12 +5,18 @@ The single source of how skills are generated.
 ## Pipeline
 
 ```
-collect.py   →   manifest.json   →   distiller agent   →   distilled/<id>.md   →   skill-creator agent   →   skills/<category>/<name>.md
-   ↑                                       ↑                                            ↑
-   one script                              one agent                                    one agent
-   (arxiv API + great-mathematician        (extracts operational                        (writes one skill if a pattern
-    registry)                                heuristics from one source)                 passes the capability-multiplier test)
+collect.py   →   manifest.json   →   distiller   →   distilled/<area>/<vertical>/<id>.md   →   skill-creator   →   skills/...
+   ↑                                     ↑                                                          ↑
+   one script                            one agent                                                  one agent
+   (arxiv API + great-mathematician      (routes via verticals.py                                   (arxiv → skills/<area>/<vertical>/...
+    registry)                             from manifest tags)                                        great → skills/souls/<id>.md
+                                                                                                     + config/soul.md entry)
 ```
+
+Two skill kinds:
+
+- **arxiv-derived** → `skills/<area>/<vertical>/<name>.md`, with a `Category: <area>-<vertical>` label inside the file. Loaded at the point of need by proving agents.
+- **great-mathematician-derived** → `skills/souls/<source_id>.md` (a heuristic-mind fragment). Listed in `config/soul.md`; the user picks one "soul" at first login.
 
 `run.py` is the queue manager — it reads `manifest.json` + `distilled/`, prints what's pending. The user steps the pipeline forward with `/distill`.
 
@@ -27,12 +33,19 @@ distill_mathematicians/
     distill.md               ← /distill — step the pipeline
   lib/
     collect.py               ← arxiv API + great-mathematician registry → manifest entries
+    verticals.py             ← arxiv tag → (area, vertical-folder) routing table
     run.py                   ← queue manager
   sources/                   ← gitignored — local cache of fetched papers
     arxiv/
     great_mathematicians/
-  distilled/                 ← gitignored — distiller outputs
+  distilled/                 ← gitignored — distiller outputs, sorted into <area>/<vertical>/
+    math/<vertical>/<id>.md
+    tcs/<vertical>/<id>.md
 ```
+
+## Verticals
+
+12 math (MSC primaries) + 9 TCS (arXiv cs.*). The full mapping lives in `lib/verticals.py`; `route(tags)` returns `(area, vertical)` for any source.
 
 ## Two source kinds, one taxonomy
 
