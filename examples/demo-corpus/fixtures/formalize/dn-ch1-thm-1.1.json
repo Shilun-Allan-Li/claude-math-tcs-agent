@@ -1,0 +1,27 @@
+{
+  "status": "PROPOSED",
+  "lean_name": "DemoNaturals.divides_trans",
+  "namespace": "DemoNaturals",
+  "declaration_kind": "theorem",
+  "imports": ["Mathlib.Data.Nat.Basic"],
+  "variables": ["{a b c : ℕ}"],
+  "typeclasses": [],
+  "statement": "theorem divides_trans (hab : Divides a b) (hbc : Divides b c) :\n    Divides a c := by\n  sorry",
+  "sorry_kind": "proof_pending",
+  "mappings": [
+    {
+      "aspect": "transitivity",
+      "source_form": "If $a \\mid b$ and $b \\mid c$, then $a \\mid c$.",
+      "lean_form": "Divides a b → Divides b c → Divides a c",
+      "mapping_type": "notation",
+      "semantic_status": "equivalent",
+      "justification": "The two hypotheses become binders; the conclusion is unchanged."
+    }
+  ],
+  "hypotheses_added": [],
+  "hypotheses_dropped": [],
+  "design_warnings": [],
+  "mathlib_candidates": [{"name": "dvd_trans", "relation": "stronger", "verified": false}],
+  "needs_design_reason": null,
+  "failure_reason": null
+}

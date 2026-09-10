@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "ReviewStatus": {
+      "enum": [
+        "UNREVIEWED",
+        "AGENT_PASS",
+        "NEEDS_HUMAN",
+        "APPROVED",
+        "REJECTED",
+        "NEEDS_REVISION"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One human decision, recorded immutably.\n\n``superseded_by`` exists because of issue ``i-033``: exercise 1.5.2 was judged\nGENERALIZE and later reversed to DROP when the Mathlib lemma was found. Without\nversioned decisions a reversal is indistinguishable from a contradiction.",
+  "properties": {
+    "artifact_fingerprint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fingerprint of what was reviewed; a later change makes the decision stale.",
+      "title": "Artifact Fingerprint"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "declaration_id": {
+      "title": "Declaration Id",
+      "type": "string"
+    },
+    "findings_reviewed": {
+      "description": "CheckerFinding ids this decision was made against.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Findings Reviewed",
+      "type": "array"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "reviewer": {
+      "title": "Reviewer",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ReviewStatus"
+    },
+    "superseded_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Superseded By"
+    }
+  },
+  "required": [
+    "id",
+    "declaration_id",
+    "status",
+    "reviewer",
+    "rationale"
+  ],
+  "title": "ReviewDecision",
+  "type": "object"
+}

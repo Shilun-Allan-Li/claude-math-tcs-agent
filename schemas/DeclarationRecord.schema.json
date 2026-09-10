@@ -1,0 +1,1245 @@
+{
+  "$defs": {
+    "AnnotatedDeclaration": {
+      "additionalProperties": false,
+      "description": "Machine-readable annotation for exactly one source item.",
+      "properties": {
+        "chapter_id": {
+          "title": "Chapter Id",
+          "type": "string"
+        },
+        "concepts": {
+          "description": "Closed-vocabulary concept tags used for retrieval.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Concepts",
+          "type": "array"
+        },
+        "conclusion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The book's conclusion, restated compactly.",
+          "title": "Conclusion"
+        },
+        "declaration_id": {
+          "title": "Declaration Id",
+          "type": "string"
+        },
+        "difficulty": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Raw difficulty grade, 0-100.",
+          "title": "Difficulty"
+        },
+        "figure_dependencies": {
+          "description": "Figures the argument relies on. Stage 0 drops figures by design (204 sites); recording the dependency lets a reviewer see when a proof reasons from a picture that is not in the corpus.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Figure Dependencies",
+          "type": "array"
+        },
+        "formalization_hints": {
+          "description": "Representation hazards. The annotation's strongest observed output.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Formalization Hints",
+          "type": "array"
+        },
+        "informal_dependencies": {
+          "items": {
+            "$ref": "#/$defs/InformalDependency"
+          },
+          "title": "Informal Dependencies",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceItemKind"
+        },
+        "local_definition_hints": {
+          "description": "Declaration ids of prior local definitions this statement needs.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Local Definition Hints",
+          "type": "array"
+        },
+        "mathlib_candidates": {
+          "items": {
+            "$ref": "#/$defs/MathlibCandidate"
+          },
+          "title": "Mathlib Candidates",
+          "type": "array"
+        },
+        "proof_steps": {
+          "items": {
+            "$ref": "#/$defs/ProofStep"
+          },
+          "title": "Proof Steps",
+          "type": "array"
+        },
+        "proof_strategy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "One- to three-sentence summary of the book's argument.",
+          "title": "Proof Strategy"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/OpenQuestion"
+          },
+          "title": "Questions",
+          "type": "array"
+        },
+        "route": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "inline | ladder | orchestrator | skip",
+          "title": "Route"
+        },
+        "source_fingerprint": {
+          "description": "Fingerprint of the SourceItem this annotates; detects staleness.",
+          "title": "Source Fingerprint",
+          "type": "string"
+        },
+        "stated_hypotheses": {
+          "description": "Every hypothesis the book states, including ones stated once at the top of a section and inherited silently. Report 01 \u00a7D1: five theorems in the summer corpus are FALSE as formalized because a prose hypothesis had no field to travel in. This field carries a mandatory human gate.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Stated Hypotheses",
+          "type": "array"
+        },
+        "terminology": {
+          "description": "Terms the book introduces or relies on here.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Terminology",
+          "type": "array"
+        }
+      },
+      "required": [
+        "declaration_id",
+        "chapter_id",
+        "kind",
+        "source_fingerprint",
+        "provenance"
+      ],
+      "title": "AnnotatedDeclaration",
+      "type": "object"
+    },
+    "CompileStatus": {
+      "enum": [
+        "ok",
+        "error",
+        "not_built",
+        "unknown"
+      ],
+      "title": "CompileStatus",
+      "type": "string"
+    },
+    "DependencyFacet": {
+      "additionalProperties": false,
+      "description": "Dependency views, kept denormalised on the record for fast rendering.\n\nThe corpus graph is authoritative; these are a materialised projection refreshed by\n``CorpusRegistry.refresh_dependency_facets``.",
+      "properties": {
+        "informal": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Informal",
+          "type": "array"
+        },
+        "lean_local": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Lean Local",
+          "type": "array"
+        },
+        "mathlib": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Mathlib",
+          "type": "array"
+        },
+        "reverse": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reverse",
+          "type": "array"
+        },
+        "unresolved": {
+          "description": "Raw source references that resolved to no declaration.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Unresolved",
+          "type": "array"
+        }
+      },
+      "title": "DependencyFacet",
+      "type": "object"
+    },
+    "InformalDependency": {
+      "additionalProperties": false,
+      "description": "A dependency the *book* asserts, before any Lean exists.\n\nReport 01 \u00a7B6: the summer recorded these in prose only -- 176 of 226 declarations were\ncited by name in another declaration's docstring and by nothing else, while 224 of 226\nhad zero Lean-code references. The informal graph and the formal graph never met.",
+      "properties": {
+        "raw_reference": {
+          "description": "What the book wrote, e.g. 'theorem 2.3'.",
+          "title": "Raw Reference",
+          "type": "string"
+        },
+        "resolved": {
+          "default": false,
+          "description": "False when the reference could not be resolved to an id.",
+          "title": "Resolved",
+          "type": "boolean"
+        },
+        "role": {
+          "default": "uses",
+          "description": "uses | generalises | specialises | cited-by-book | deferred-to",
+          "title": "Role",
+          "type": "string"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Declaration id, when the reference resolves.",
+          "title": "Target Id"
+        }
+      },
+      "required": [
+        "raw_reference"
+      ],
+      "title": "InformalDependency",
+      "type": "object"
+    },
+    "LeanDeclarationKind": {
+      "enum": [
+        "theorem",
+        "lemma",
+        "def",
+        "abbrev",
+        "structure",
+        "inductive",
+        "instance",
+        "class"
+      ],
+      "title": "LeanDeclarationKind",
+      "type": "string"
+    },
+    "LeanFacet": {
+      "additionalProperties": false,
+      "description": "The Lean side. Every field here is produced or confirmed by Lean tooling.",
+      "properties": {
+        "declaration_kind": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LeanDeclarationKind"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "end_line": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Line"
+        },
+        "file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "File"
+        },
+        "line": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line"
+        },
+        "module": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Module"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "proof": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The accepted proof body, once one has been verified. Kept on the record rather than folded into the FormalizationProposal, because the proposal is what stage 2 produced and must stay comparable to what a reviewer approved.",
+          "title": "Proof"
+        },
+        "sorry_kind": {
+          "$ref": "#/$defs/SorryKind",
+          "default": "none"
+        },
+        "statement": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Statement"
+        }
+      },
+      "title": "LeanFacet",
+      "type": "object"
+    },
+    "MappingType": {
+      "description": "How a Lean expression differs in form from its source expression.",
+      "enum": [
+        "notation",
+        "renaming",
+        "representation",
+        "specialization",
+        "generalization",
+        "semantic_deviation",
+        "uncertain"
+      ],
+      "title": "MappingType",
+      "type": "string"
+    },
+    "MathlibCandidate": {
+      "additionalProperties": false,
+      "description": "A Mathlib name the annotator believes is relevant.\n\n``status`` carries the single highest-signal token in the summer corpus: 446 instances\nof ``MISSING -- must be built`` across ten chapters. ``verified`` records whether the\nname was actually checked; report 02 \u00a7B7 measured the cost of not checking -- 12\ndeclarations written, proved, then archived as exact Mathlib duplicates.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "status": {
+          "default": "uncertain",
+          "description": "exists | missing | uncertain",
+          "title": "Status",
+          "type": "string"
+        },
+        "verified": {
+          "default": false,
+          "description": "True only if the identifier was mechanically confirmed.",
+          "title": "Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "MathlibCandidate",
+      "type": "object"
+    },
+    "NotationEntry": {
+      "additionalProperties": false,
+      "description": "One row of the source-notation table.\n\nReport 01 \u00a7E.4: 454 notation rows were re-derived across ten chapters, with symbols\nlike nu, epsilon, delta and omega recurring in six or more. These belong in the corpus\nregistry once, not per chapter -- but they are *observed* per chapter, so they are\ncollected here and promoted by the registry.",
+      "properties": {
+        "decided_in": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Declaration id where this mapping was fixed.",
+          "title": "Decided In"
+        },
+        "lean": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Exact Lean identifier, if resolved.",
+          "title": "Lean"
+        },
+        "meaning": {
+          "description": "What the book says it denotes.",
+          "title": "Meaning",
+          "type": "string"
+        },
+        "symbol": {
+          "description": "Source notation, verbatim, e.g. 'kappa(G)'.",
+          "title": "Symbol",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol",
+        "meaning"
+      ],
+      "title": "NotationEntry",
+      "type": "object"
+    },
+    "OpenQuestion": {
+      "additionalProperties": false,
+      "description": "Something the annotator could not settle and a human may need to.",
+      "properties": {
+        "blocks_formalization": {
+          "default": false,
+          "title": "Blocks Formalization",
+          "type": "boolean"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "title": "OpenQuestion",
+      "type": "object"
+    },
+    "ProofStep": {
+      "additionalProperties": false,
+      "description": "One step of the book's printed proof, in the book's own terms.",
+      "properties": {
+        "index": {
+          "minimum": 1,
+          "title": "Index",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "uses": {
+          "description": "Declaration ids or raw references this step invokes.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Uses",
+          "type": "array"
+        }
+      },
+      "required": [
+        "index",
+        "text"
+      ],
+      "title": "ProofStep",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where an artifact came from and what it was produced against.\n\nReport 01 \u00a7B4 is the reason this exists and is required on every agent-produced\nartifact: the summer's annotations asserted repository facts with no record of the\nrepository state they were written against, and those assertions went silently false.",
+      "properties": {
+        "context_package_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ContextPackage this artifact was generated from.",
+          "title": "Context Package Id"
+        },
+        "corpus_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Corpus registry version this was generated against.",
+          "title": "Corpus Version"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "input_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fingerprint of the exact input content (staleness check).",
+          "title": "Input Fingerprint"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Model id, or None if deterministic.",
+          "title": "Model"
+        },
+        "producer": {
+          "description": "Component that produced the artifact, e.g. 'annotator'.",
+          "title": "Producer",
+          "type": "string"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Version-controlled prompt identifier, e.g. 'annotate/v1'.",
+          "title": "Prompt Version"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "LLM provider, or None for deterministic producers.",
+          "title": "Provider"
+        }
+      },
+      "required": [
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "ReviewDecision": {
+      "additionalProperties": false,
+      "description": "One human decision, recorded immutably.\n\n``superseded_by`` exists because of issue ``i-033``: exercise 1.5.2 was judged\nGENERALIZE and later reversed to DROP when the Mathlib lemma was found. Without\nversioned decisions a reversal is indistinguishable from a contradiction.",
+      "properties": {
+        "artifact_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fingerprint of what was reviewed; a later change makes the decision stale.",
+          "title": "Artifact Fingerprint"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "declaration_id": {
+          "title": "Declaration Id",
+          "type": "string"
+        },
+        "findings_reviewed": {
+          "description": "CheckerFinding ids this decision was made against.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Findings Reviewed",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "reviewer": {
+          "title": "Reviewer",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ReviewStatus"
+        },
+        "superseded_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Superseded By"
+        }
+      },
+      "required": [
+        "id",
+        "declaration_id",
+        "status",
+        "reviewer",
+        "rationale"
+      ],
+      "title": "ReviewDecision",
+      "type": "object"
+    },
+    "ReviewNote": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "title": "Author",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "author",
+        "text"
+      ],
+      "title": "ReviewNote",
+      "type": "object"
+    },
+    "ReviewState": {
+      "additionalProperties": false,
+      "description": "Current review state of one declaration.",
+      "properties": {
+        "agent_status": {
+          "$ref": "#/$defs/ReviewStatus",
+          "default": "UNREVIEWED",
+          "description": "What the checkers concluded. Agents may write this freely."
+        },
+        "declaration_id": {
+          "title": "Declaration Id",
+          "type": "string"
+        },
+        "human_decision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReviewDecision"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The standing human decision. Never written by an agent."
+        },
+        "notes": {
+          "items": {
+            "$ref": "#/$defs/ReviewNote"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "risk_factors": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Per-factor contributions, so the score stays readable.",
+          "title": "Risk Factors",
+          "type": "object"
+        },
+        "risk_score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Interpretable priority score; see pipeline.review.risk.",
+          "title": "Risk Score"
+        }
+      },
+      "required": [
+        "declaration_id"
+      ],
+      "title": "ReviewState",
+      "type": "object"
+    },
+    "ReviewStatus": {
+      "enum": [
+        "UNREVIEWED",
+        "AGENT_PASS",
+        "NEEDS_HUMAN",
+        "APPROVED",
+        "REJECTED",
+        "NEEDS_REVISION"
+      ],
+      "title": "ReviewStatus",
+      "type": "string"
+    },
+    "SemanticStatus": {
+      "description": "Whether the Lean form means the same thing as the source form.",
+      "enum": [
+        "equivalent",
+        "likely_equivalent",
+        "not_equivalent",
+        "uncertain"
+      ],
+      "title": "SemanticStatus",
+      "type": "string"
+    },
+    "SorryKind": {
+      "description": "What an occurrence of ``sorry`` means.\n\nReport 02 \u00a7B4: the summer treated ``def f := sorry`` as interchangeable with\n``theorem t := by sorry``. They are not. An unfinished *proof* leaves downstream\nresults unproved; an unfinished *object* leaves them **vacuous** -- 13 opaque\nconstants made 18+ theorems meaningless in one module.",
+      "enum": [
+        "none",
+        "proof_pending",
+        "object_pending",
+        "field_pending"
+      ],
+      "title": "SorryKind",
+      "type": "string"
+    },
+    "SourceItem": {
+      "additionalProperties": false,
+      "description": "A single mathematical item as the *book* states it.\n\nDeliberately free of any Lean notion. Rule 3: source terminology, notation, numbering\nand statement identity are stored, never replaced. ``statement`` is a verbatim slice of\nthe chapter markdown -- not a paraphrase -- so that fidelity checking compares against\nthe book rather than against an agent's summary of it (report 01 \u00a7D2).",
+      "properties": {
+        "chapter": {
+          "title": "Chapter",
+          "type": "string"
+        },
+        "chapter_id": {
+          "title": "Chapter Id",
+          "type": "string"
+        },
+        "document_id": {
+          "title": "Document Id",
+          "type": "string"
+        },
+        "id": {
+          "description": "Stable declaration id from pipeline.corpus.ids.declaration_id.",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceItemKind"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Printed label, e.g. '3.2' or '1.2.8(b)'.",
+          "title": "Label"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Term the book introduces, for unlabelled definitions.",
+          "title": "Name"
+        },
+        "notation": {
+          "items": {
+            "$ref": "#/$defs/NotationEntry"
+          },
+          "title": "Notation",
+          "type": "array"
+        },
+        "proof": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Verbatim printed proof, if the book gives one.",
+          "title": "Proof"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "section": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Book section, e.g. '3.1'.",
+          "title": "Section"
+        },
+        "span": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceSpan"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "statement": {
+          "description": "Verbatim source text of the statement.",
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "document_id",
+        "chapter_id",
+        "chapter",
+        "kind",
+        "statement",
+        "provenance"
+      ],
+      "title": "SourceItem",
+      "type": "object"
+    },
+    "SourceItemKind": {
+      "description": "What the textbook calls this item.\n\nKept separate from :class:`LeanDeclarationKind`: the book's `definition` may become a\nLean `def`, `abbrev`, `structure` or `Prop`, and an `exercise` may become a `theorem`.\nConflating them is how source identity gets lost (report 01 \u00a7B2).",
+      "enum": [
+        "definition",
+        "theorem",
+        "lemma",
+        "corollary",
+        "proposition",
+        "exercise",
+        "example",
+        "construction",
+        "notation",
+        "remark"
+      ],
+      "title": "SourceItemKind",
+      "type": "string"
+    },
+    "SourceLeanMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "aspect": {
+          "description": "What is being mapped, e.g. 'edge cut' or 'the carrier type'.",
+          "title": "Aspect",
+          "type": "string"
+        },
+        "confidence": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "declaration_id": {
+          "title": "Declaration Id",
+          "type": "string"
+        },
+        "declared_by_producer": {
+          "default": true,
+          "description": "True when the formalizer itself declared the divergence. A checker finding that merely confirms a declared mapping is an audit trail entry, not a defect -- this is what keeps the fidelity checker's false-positive rate usable.",
+          "title": "Declared By Producer",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Stable within a declaration: '<declaration_id>/m<N>'.",
+          "title": "Id",
+          "type": "string"
+        },
+        "justification": {
+          "description": "Why the change is sound, in the producer's own words. Report 02 \u00a7C1: the summer wrote these as '## In Lean notation' docstring sections and they are the single most valuable artifact in the corpus -- the container was the problem, not the practice.",
+          "title": "Justification",
+          "type": "string"
+        },
+        "lean_form": {
+          "description": "The Lean form.",
+          "title": "Lean Form",
+          "type": "string"
+        },
+        "mapping_type": {
+          "$ref": "#/$defs/MappingType"
+        },
+        "semantic_status": {
+          "$ref": "#/$defs/SemanticStatus"
+        },
+        "source_form": {
+          "description": "The book's form, verbatim where possible.",
+          "title": "Source Form",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "declaration_id",
+        "aspect",
+        "source_form",
+        "lean_form",
+        "mapping_type",
+        "semantic_status",
+        "justification"
+      ],
+      "title": "SourceLeanMapping",
+      "type": "object"
+    },
+    "SourceSpan": {
+      "additionalProperties": false,
+      "description": "Character range inside a chapter's Markdown, plus the page it sits on.\n\nReport 01 \u00a7B1 measured the loss this prevents: the raw extraction carries 9-24\n``<!-- p.NNN -->`` markers per chapter and the annotated chapters carry **zero**, so\npage provenance died at the annotation boundary. Holding the span lets ``page`` be\n*derived* from the nearest preceding marker instead of being re-typed by an agent.",
+      "properties": {
+        "end": {
+          "minimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "pdf_page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Page number within the PDF.",
+          "title": "Pdf Page"
+        },
+        "printed_page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Page number as printed in the book.",
+          "title": "Printed Page"
+        },
+        "start": {
+          "description": "Character offset into the chapter markdown.",
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "SourceSpan",
+      "type": "object"
+    },
+    "TrustFacet": {
+      "additionalProperties": false,
+      "description": "Whether this declaration may be relied upon. Rule 5: Lean decides, not an LLM.",
+      "properties": {
+        "axioms": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Axioms",
+          "type": "array"
+        },
+        "blocked_by": {
+          "description": "Declaration ids whose untrusted state propagates here. Scheduler input.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Blocked By",
+          "type": "array"
+        },
+        "checked_at_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Lean source fingerprint the verdict was computed from.",
+          "title": "Checked At Fingerprint"
+        },
+        "compile_status": {
+          "$ref": "#/$defs/CompileStatus",
+          "default": "unknown"
+        },
+        "direct_sorry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Direct Sorry"
+        },
+        "status": {
+          "$ref": "#/$defs/TrustStatus",
+          "default": "UNKNOWN"
+        },
+        "transitive_sorry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transitive Sorry"
+        },
+        "unfinished_construction": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unfinished Construction"
+        }
+      },
+      "title": "TrustFacet",
+      "type": "object"
+    },
+    "TrustStatus": {
+      "description": "Whether a declaration may be relied upon. Decided by Lean, never by an LLM.",
+      "enum": [
+        "FULLY_VERIFIED",
+        "DIRECT_SORRY",
+        "TRANSITIVE_SORRY",
+        "UNFINISHED_CONSTRUCTION",
+        "BLOCKED_BY_UNTRUSTED_DEPENDENCY",
+        "COMPILE_FAILURE",
+        "UNKNOWN"
+      ],
+      "title": "TrustStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The aggregate. ``id`` is source-derived and never changes.\n\nDerived values (:attr:`is_theorem_like`, :attr:`is_foundational`,\n:attr:`reverse_dependency_count`) are plain properties, deliberately **not**\nserialized fields. Storing a derived value is how it goes stale; the view layer\ncomputes them when rendering, and the artifact on disk stays canonical.",
+  "properties": {
+    "annotation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AnnotatedDeclaration"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "dependencies": {
+      "$ref": "#/$defs/DependencyFacet"
+    },
+    "finding_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Finding Ids",
+      "type": "array"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/SourceItemKind"
+    },
+    "lean": {
+      "$ref": "#/$defs/LeanFacet"
+    },
+    "mappings": {
+      "items": {
+        "$ref": "#/$defs/SourceLeanMapping"
+      },
+      "title": "Mappings",
+      "type": "array"
+    },
+    "proof_attempt_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Proof Attempt Ids",
+      "type": "array"
+    },
+    "proposal_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Current FormalizationProposal.",
+      "title": "Proposal Id"
+    },
+    "review": {
+      "$ref": "#/$defs/ReviewState"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceItem"
+    },
+    "trust": {
+      "$ref": "#/$defs/TrustFacet"
+    }
+  },
+  "required": [
+    "id",
+    "kind",
+    "source",
+    "review"
+  ],
+  "title": "DeclarationRecord",
+  "type": "object"
+}

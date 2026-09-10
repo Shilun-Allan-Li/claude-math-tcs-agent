@@ -1,0 +1,67 @@
+{
+  "section_summary": "Defines divisibility on the natural numbers and proves that it is transitive and closed under addition.",
+  "notation": [
+    {"symbol": "a \\mid b", "meaning": "a divides b", "lean": "Dvd.dvd"}
+  ],
+  "definitions": [
+    {
+      "term": "divides",
+      "quote": "We say that $a$ *divides* $b$, written $a \\mid b$, if there is a natural number $q$ with $b = a q$.",
+      "kind": "definition",
+      "stated_hypotheses": ["a and b are natural numbers"],
+      "concepts": ["divisibility"],
+      "terminology": ["divides", "divisor"],
+      "informal_dependencies": [],
+      "formalization_hints": [
+        "Mathlib already has this as `Dvd.dvd` on a monoid; a demo definition should say so rather than shadow it."
+      ],
+      "mathlib_candidates": [
+        {"name": "Dvd.dvd", "status": "exists", "note": "the library spelling of a | b"}
+      ],
+      "questions": []
+    }
+  ],
+  "annotations": [
+    {
+      "declaration_id": "dn-ch1-thm-1.1",
+      "stated_hypotheses": ["a divides b", "b divides c"],
+      "conclusion": "a divides c",
+      "concepts": ["divisibility", "transitivity"],
+      "terminology": ["divides"],
+      "informal_dependencies": [],
+      "proof_strategy": "Compose the two witnesses: if b = aq and c = br then c = a(qr).",
+      "proof_steps": [
+        {"index": 1, "text": "Write b = a q from the first hypothesis.", "uses": []},
+        {"index": 2, "text": "Write c = b r from the second hypothesis.", "uses": []},
+        {"index": 3, "text": "Substitute to get c = a (q r), so a divides c.", "uses": []}
+      ],
+      "formalization_hints": ["This is `dvd_trans` in Mathlib."],
+      "mathlib_candidates": [{"name": "dvd_trans", "status": "exists", "note": null}],
+      "local_definition_hints": ["divides"],
+      "figure_dependencies": [],
+      "difficulty": 8,
+      "route": "inline",
+      "questions": []
+    },
+    {
+      "declaration_id": "dn-ch1-thm-1.2",
+      "stated_hypotheses": ["a divides b", "a divides c"],
+      "conclusion": "a divides b + c",
+      "concepts": ["divisibility", "additivity"],
+      "terminology": ["divides"],
+      "informal_dependencies": [],
+      "proof_strategy": "Factor a out of the sum of the two witnesses.",
+      "proof_steps": [
+        {"index": 1, "text": "Write b = a q and c = a r.", "uses": []},
+        {"index": 2, "text": "Then b + c = a (q + r) by distributivity.", "uses": []}
+      ],
+      "formalization_hints": ["This is `dvd_add` in Mathlib."],
+      "mathlib_candidates": [{"name": "dvd_add", "status": "exists", "note": null}],
+      "local_definition_hints": ["divides"],
+      "figure_dependencies": [],
+      "difficulty": 8,
+      "route": "inline",
+      "questions": []
+    }
+  ]
+}

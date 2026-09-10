@@ -1,0 +1,27 @@
+{
+  "status": "PROPOSED",
+  "lean_name": "DemoNaturals.divides_add_add",
+  "namespace": "DemoNaturals",
+  "declaration_kind": "theorem",
+  "imports": ["Mathlib.Data.Nat.Basic"],
+  "variables": ["{a b c : ℕ}"],
+  "typeclasses": [],
+  "statement": "theorem divides_add_add (hab : Divides a b) (hac : Divides a c) :\n    Divides a (b + b + c) :=\n  divides_add (divides_add hab hab) hac",
+  "sorry_kind": "none",
+  "mappings": [
+    {
+      "aspect": "b + b + c",
+      "source_form": "$a \\mid (b + b + c)$",
+      "lean_form": "Divides a (b + b + c)",
+      "mapping_type": "representation",
+      "semantic_status": "equivalent",
+      "justification": "Lean's + is left-associative, so b + b + c elaborates as (b + b) + c, which is the reading the book's proof uses."
+    }
+  ],
+  "hypotheses_added": [],
+  "hypotheses_dropped": [],
+  "design_warnings": [],
+  "mathlib_candidates": [{"name": "dvd_add", "relation": "related", "verified": false}],
+  "needs_design_reason": null,
+  "failure_reason": null
+}

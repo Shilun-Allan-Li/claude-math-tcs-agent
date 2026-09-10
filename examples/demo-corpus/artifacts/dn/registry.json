@@ -1,0 +1,12 @@
+{
+  "conventions": {},
+  "notation": {
+    "a \\mid b": {
+      "decided_in": "dn-ch1",
+      "lean": "Dvd.dvd",
+      "meaning": "a divides b",
+      "symbol": "a \\mid b"
+    }
+  },
+  "version": 36
+}

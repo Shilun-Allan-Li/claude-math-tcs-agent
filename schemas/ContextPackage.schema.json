@@ -1,0 +1,202 @@
+{
+  "$defs": {
+    "ContextItem": {
+      "additionalProperties": false,
+      "description": "One retrieved element, with the reason it was retrieved.",
+      "properties": {
+        "content": {
+          "title": "Content",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Why the graph returned it, e.g. 'informal_dependency of target'.",
+          "title": "Reason",
+          "type": "string"
+        },
+        "ref": {
+          "description": "Declaration id, Mathlib name, or artifact id.",
+          "title": "Ref",
+          "type": "string"
+        },
+        "role": {
+          "description": "target | source_passage | annotation | approved_dependency | notation | convention | mathlib_candidate | diagnostics | prior_attempt | digest",
+          "title": "Role",
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "ref",
+        "content",
+        "reason"
+      ],
+      "title": "ContextItem",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where an artifact came from and what it was produced against.\n\nReport 01 \u00a7B4 is the reason this exists and is required on every agent-produced\nartifact: the summer's annotations asserted repository facts with no record of the\nrepository state they were written against, and those assertions went silently false.",
+      "properties": {
+        "context_package_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ContextPackage this artifact was generated from.",
+          "title": "Context Package Id"
+        },
+        "corpus_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Corpus registry version this was generated against.",
+          "title": "Corpus Version"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "input_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fingerprint of the exact input content (staleness check).",
+          "title": "Input Fingerprint"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Model id, or None if deterministic.",
+          "title": "Model"
+        },
+        "producer": {
+          "description": "Component that produced the artifact, e.g. 'annotator'.",
+          "title": "Producer",
+          "type": "string"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Version-controlled prompt identifier, e.g. 'annotate/v1'.",
+          "title": "Prompt Version"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "LLM provider, or None for deterministic producers.",
+          "title": "Provider"
+        }
+      },
+      "required": [
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Stage": {
+      "enum": [
+        "ingest",
+        "annotate",
+        "formalize",
+        "check",
+        "review",
+        "prove",
+        "integrate"
+      ],
+      "title": "Stage",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "budget_chars": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Configured ceiling, for the audit trail.",
+      "title": "Budget Chars"
+    },
+    "corpus_version": {
+      "description": "Registry version the package was built against; detects staleness.",
+      "title": "Corpus Version",
+      "type": "integer"
+    },
+    "id": {
+      "description": "'cp-' plus a digest of (stage, target, item refs, content).",
+      "title": "Id",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ContextItem"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "stage": {
+      "$ref": "#/$defs/Stage"
+    },
+    "target_id": {
+      "description": "Declaration the package was built for.",
+      "title": "Target Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "stage",
+    "target_id",
+    "corpus_version",
+    "provenance"
+  ],
+  "title": "ContextPackage",
+  "type": "object"
+}

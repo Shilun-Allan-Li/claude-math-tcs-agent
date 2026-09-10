@@ -1,0 +1,411 @@
+{
+  "$defs": {
+    "InformalDependency": {
+      "additionalProperties": false,
+      "description": "A dependency the *book* asserts, before any Lean exists.\n\nReport 01 \u00a7B6: the summer recorded these in prose only -- 176 of 226 declarations were\ncited by name in another declaration's docstring and by nothing else, while 224 of 226\nhad zero Lean-code references. The informal graph and the formal graph never met.",
+      "properties": {
+        "raw_reference": {
+          "description": "What the book wrote, e.g. 'theorem 2.3'.",
+          "title": "Raw Reference",
+          "type": "string"
+        },
+        "resolved": {
+          "default": false,
+          "description": "False when the reference could not be resolved to an id.",
+          "title": "Resolved",
+          "type": "boolean"
+        },
+        "role": {
+          "default": "uses",
+          "description": "uses | generalises | specialises | cited-by-book | deferred-to",
+          "title": "Role",
+          "type": "string"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Declaration id, when the reference resolves.",
+          "title": "Target Id"
+        }
+      },
+      "required": [
+        "raw_reference"
+      ],
+      "title": "InformalDependency",
+      "type": "object"
+    },
+    "MathlibCandidate": {
+      "additionalProperties": false,
+      "description": "A Mathlib name the annotator believes is relevant.\n\n``status`` carries the single highest-signal token in the summer corpus: 446 instances\nof ``MISSING -- must be built`` across ten chapters. ``verified`` records whether the\nname was actually checked; report 02 \u00a7B7 measured the cost of not checking -- 12\ndeclarations written, proved, then archived as exact Mathlib duplicates.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "status": {
+          "default": "uncertain",
+          "description": "exists | missing | uncertain",
+          "title": "Status",
+          "type": "string"
+        },
+        "verified": {
+          "default": false,
+          "description": "True only if the identifier was mechanically confirmed.",
+          "title": "Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "MathlibCandidate",
+      "type": "object"
+    },
+    "OpenQuestion": {
+      "additionalProperties": false,
+      "description": "Something the annotator could not settle and a human may need to.",
+      "properties": {
+        "blocks_formalization": {
+          "default": false,
+          "title": "Blocks Formalization",
+          "type": "boolean"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "title": "OpenQuestion",
+      "type": "object"
+    },
+    "ProofStep": {
+      "additionalProperties": false,
+      "description": "One step of the book's printed proof, in the book's own terms.",
+      "properties": {
+        "index": {
+          "minimum": 1,
+          "title": "Index",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "uses": {
+          "description": "Declaration ids or raw references this step invokes.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Uses",
+          "type": "array"
+        }
+      },
+      "required": [
+        "index",
+        "text"
+      ],
+      "title": "ProofStep",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where an artifact came from and what it was produced against.\n\nReport 01 \u00a7B4 is the reason this exists and is required on every agent-produced\nartifact: the summer's annotations asserted repository facts with no record of the\nrepository state they were written against, and those assertions went silently false.",
+      "properties": {
+        "context_package_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ContextPackage this artifact was generated from.",
+          "title": "Context Package Id"
+        },
+        "corpus_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Corpus registry version this was generated against.",
+          "title": "Corpus Version"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "input_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fingerprint of the exact input content (staleness check).",
+          "title": "Input Fingerprint"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Model id, or None if deterministic.",
+          "title": "Model"
+        },
+        "producer": {
+          "description": "Component that produced the artifact, e.g. 'annotator'.",
+          "title": "Producer",
+          "type": "string"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Version-controlled prompt identifier, e.g. 'annotate/v1'.",
+          "title": "Prompt Version"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "LLM provider, or None for deterministic producers.",
+          "title": "Provider"
+        }
+      },
+      "required": [
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "SourceItemKind": {
+      "description": "What the textbook calls this item.\n\nKept separate from :class:`LeanDeclarationKind`: the book's `definition` may become a\nLean `def`, `abbrev`, `structure` or `Prop`, and an `exercise` may become a `theorem`.\nConflating them is how source identity gets lost (report 01 \u00a7B2).",
+      "enum": [
+        "definition",
+        "theorem",
+        "lemma",
+        "corollary",
+        "proposition",
+        "exercise",
+        "example",
+        "construction",
+        "notation",
+        "remark"
+      ],
+      "title": "SourceItemKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Machine-readable annotation for exactly one source item.",
+  "properties": {
+    "chapter_id": {
+      "title": "Chapter Id",
+      "type": "string"
+    },
+    "concepts": {
+      "description": "Closed-vocabulary concept tags used for retrieval.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Concepts",
+      "type": "array"
+    },
+    "conclusion": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The book's conclusion, restated compactly.",
+      "title": "Conclusion"
+    },
+    "declaration_id": {
+      "title": "Declaration Id",
+      "type": "string"
+    },
+    "difficulty": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Raw difficulty grade, 0-100.",
+      "title": "Difficulty"
+    },
+    "figure_dependencies": {
+      "description": "Figures the argument relies on. Stage 0 drops figures by design (204 sites); recording the dependency lets a reviewer see when a proof reasons from a picture that is not in the corpus.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Figure Dependencies",
+      "type": "array"
+    },
+    "formalization_hints": {
+      "description": "Representation hazards. The annotation's strongest observed output.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Formalization Hints",
+      "type": "array"
+    },
+    "informal_dependencies": {
+      "items": {
+        "$ref": "#/$defs/InformalDependency"
+      },
+      "title": "Informal Dependencies",
+      "type": "array"
+    },
+    "kind": {
+      "$ref": "#/$defs/SourceItemKind"
+    },
+    "local_definition_hints": {
+      "description": "Declaration ids of prior local definitions this statement needs.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Local Definition Hints",
+      "type": "array"
+    },
+    "mathlib_candidates": {
+      "items": {
+        "$ref": "#/$defs/MathlibCandidate"
+      },
+      "title": "Mathlib Candidates",
+      "type": "array"
+    },
+    "proof_steps": {
+      "items": {
+        "$ref": "#/$defs/ProofStep"
+      },
+      "title": "Proof Steps",
+      "type": "array"
+    },
+    "proof_strategy": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "One- to three-sentence summary of the book's argument.",
+      "title": "Proof Strategy"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/OpenQuestion"
+      },
+      "title": "Questions",
+      "type": "array"
+    },
+    "route": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "inline | ladder | orchestrator | skip",
+      "title": "Route"
+    },
+    "source_fingerprint": {
+      "description": "Fingerprint of the SourceItem this annotates; detects staleness.",
+      "title": "Source Fingerprint",
+      "type": "string"
+    },
+    "stated_hypotheses": {
+      "description": "Every hypothesis the book states, including ones stated once at the top of a section and inherited silently. Report 01 \u00a7D1: five theorems in the summer corpus are FALSE as formalized because a prose hypothesis had no field to travel in. This field carries a mandatory human gate.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Stated Hypotheses",
+      "type": "array"
+    },
+    "terminology": {
+      "description": "Terms the book introduces or relies on here.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Terminology",
+      "type": "array"
+    }
+  },
+  "required": [
+    "declaration_id",
+    "chapter_id",
+    "kind",
+    "source_fingerprint",
+    "provenance"
+  ],
+  "title": "AnnotatedDeclaration",
+  "type": "object"
+}

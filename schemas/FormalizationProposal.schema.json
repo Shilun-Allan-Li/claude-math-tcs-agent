@@ -1,0 +1,453 @@
+{
+  "$defs": {
+    "DesignWarning": {
+      "additionalProperties": false,
+      "description": "A hazard the formalizer noticed while writing the statement.\n\nThe typed successor to the 508 free-text ``warning`` markers in the summer's Lean\ndocstrings (report 02 \u00a7B3). The generator was not blind -- it was unheard.",
+      "properties": {
+        "blocks": {
+          "default": false,
+          "description": "True when the warning should prevent auto-approval.",
+          "title": "Blocks",
+          "type": "boolean"
+        },
+        "code": {
+          "description": "Short stable code, e.g. 'carrier-type-change'.",
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "DesignWarning",
+      "type": "object"
+    },
+    "LeanDeclarationKind": {
+      "enum": [
+        "theorem",
+        "lemma",
+        "def",
+        "abbrev",
+        "structure",
+        "inductive",
+        "instance",
+        "class"
+      ],
+      "title": "LeanDeclarationKind",
+      "type": "string"
+    },
+    "MappingType": {
+      "description": "How a Lean expression differs in form from its source expression.",
+      "enum": [
+        "notation",
+        "renaming",
+        "representation",
+        "specialization",
+        "generalization",
+        "semantic_deviation",
+        "uncertain"
+      ],
+      "title": "MappingType",
+      "type": "string"
+    },
+    "MathlibRelation": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "relation": {
+          "description": "alias | stronger | weaker | related",
+          "title": "Relation",
+          "type": "string"
+        },
+        "verified": {
+          "default": false,
+          "title": "Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "relation"
+      ],
+      "title": "MathlibRelation",
+      "type": "object"
+    },
+    "ProposalStatus": {
+      "enum": [
+        "PROPOSED",
+        "NEEDS_DESIGN",
+        "FAILED"
+      ],
+      "title": "ProposalStatus",
+      "type": "string"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where an artifact came from and what it was produced against.\n\nReport 01 \u00a7B4 is the reason this exists and is required on every agent-produced\nartifact: the summer's annotations asserted repository facts with no record of the\nrepository state they were written against, and those assertions went silently false.",
+      "properties": {
+        "context_package_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ContextPackage this artifact was generated from.",
+          "title": "Context Package Id"
+        },
+        "corpus_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Corpus registry version this was generated against.",
+          "title": "Corpus Version"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "input_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fingerprint of the exact input content (staleness check).",
+          "title": "Input Fingerprint"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Model id, or None if deterministic.",
+          "title": "Model"
+        },
+        "producer": {
+          "description": "Component that produced the artifact, e.g. 'annotator'.",
+          "title": "Producer",
+          "type": "string"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Version-controlled prompt identifier, e.g. 'annotate/v1'.",
+          "title": "Prompt Version"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "LLM provider, or None for deterministic producers.",
+          "title": "Provider"
+        }
+      },
+      "required": [
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "SemanticStatus": {
+      "description": "Whether the Lean form means the same thing as the source form.",
+      "enum": [
+        "equivalent",
+        "likely_equivalent",
+        "not_equivalent",
+        "uncertain"
+      ],
+      "title": "SemanticStatus",
+      "type": "string"
+    },
+    "SorryKind": {
+      "description": "What an occurrence of ``sorry`` means.\n\nReport 02 \u00a7B4: the summer treated ``def f := sorry`` as interchangeable with\n``theorem t := by sorry``. They are not. An unfinished *proof* leaves downstream\nresults unproved; an unfinished *object* leaves them **vacuous** -- 13 opaque\nconstants made 18+ theorems meaningless in one module.",
+      "enum": [
+        "none",
+        "proof_pending",
+        "object_pending",
+        "field_pending"
+      ],
+      "title": "SorryKind",
+      "type": "string"
+    },
+    "SourceLeanMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "aspect": {
+          "description": "What is being mapped, e.g. 'edge cut' or 'the carrier type'.",
+          "title": "Aspect",
+          "type": "string"
+        },
+        "confidence": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "declaration_id": {
+          "title": "Declaration Id",
+          "type": "string"
+        },
+        "declared_by_producer": {
+          "default": true,
+          "description": "True when the formalizer itself declared the divergence. A checker finding that merely confirms a declared mapping is an audit trail entry, not a defect -- this is what keeps the fidelity checker's false-positive rate usable.",
+          "title": "Declared By Producer",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Stable within a declaration: '<declaration_id>/m<N>'.",
+          "title": "Id",
+          "type": "string"
+        },
+        "justification": {
+          "description": "Why the change is sound, in the producer's own words. Report 02 \u00a7C1: the summer wrote these as '## In Lean notation' docstring sections and they are the single most valuable artifact in the corpus -- the container was the problem, not the practice.",
+          "title": "Justification",
+          "type": "string"
+        },
+        "lean_form": {
+          "description": "The Lean form.",
+          "title": "Lean Form",
+          "type": "string"
+        },
+        "mapping_type": {
+          "$ref": "#/$defs/MappingType"
+        },
+        "semantic_status": {
+          "$ref": "#/$defs/SemanticStatus"
+        },
+        "source_form": {
+          "description": "The book's form, verbatim where possible.",
+          "title": "Source Form",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "declaration_id",
+        "aspect",
+        "source_form",
+        "lean_form",
+        "mapping_type",
+        "semantic_status",
+        "justification"
+      ],
+      "title": "SourceLeanMapping",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A proposed Lean declaration for one annotated declaration.",
+  "properties": {
+    "annotation_fingerprint": {
+      "description": "Fingerprint of the AnnotatedDeclaration.",
+      "title": "Annotation Fingerprint",
+      "type": "string"
+    },
+    "declaration_id": {
+      "title": "Declaration Id",
+      "type": "string"
+    },
+    "declaration_kind": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LeanDeclarationKind"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "design_warnings": {
+      "items": {
+        "$ref": "#/$defs/DesignWarning"
+      },
+      "title": "Design Warnings",
+      "type": "array"
+    },
+    "failure_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Required when status is FAILED.",
+      "title": "Failure Reason"
+    },
+    "hypotheses_added": {
+      "description": "Hypotheses in the Lean statement with no source counterpart, each justified.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Hypotheses Added",
+      "type": "array"
+    },
+    "hypotheses_dropped": {
+      "description": "Source hypotheses absent from the Lean statement. Any entry is high risk.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Hypotheses Dropped",
+      "type": "array"
+    },
+    "id": {
+      "description": "'<declaration_id>/f<N>' -- stable per declaration.",
+      "title": "Id",
+      "type": "string"
+    },
+    "imports": {
+      "description": "Precise Mathlib modules.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Imports",
+      "type": "array"
+    },
+    "lean_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Fully qualified, e.g. 'SimpleGraph.foo'.",
+      "title": "Lean Name"
+    },
+    "mappings": {
+      "items": {
+        "$ref": "#/$defs/SourceLeanMapping"
+      },
+      "title": "Mappings",
+      "type": "array"
+    },
+    "mathlib_candidates": {
+      "items": {
+        "$ref": "#/$defs/MathlibRelation"
+      },
+      "title": "Mathlib Candidates",
+      "type": "array"
+    },
+    "namespace": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Namespace"
+    },
+    "needs_design_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Required when status is NEEDS_DESIGN.",
+      "title": "Needs Design Reason"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "sorry_kind": {
+      "$ref": "#/$defs/SorryKind",
+      "default": "none",
+      "description": "Which kind of `sorry` the body carries. OBJECT_PENDING is the one that matters: report 02 \u00a7B4 -- 13 opaque `def := sorry` constants made 18+ theorems vacuous rather than merely unproved."
+    },
+    "statement": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The full Lean declaration text, body included.",
+      "title": "Statement"
+    },
+    "status": {
+      "$ref": "#/$defs/ProposalStatus"
+    },
+    "typeclasses": {
+      "description": "e.g. '[Fintype V]'.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Typeclasses",
+      "type": "array"
+    },
+    "variables": {
+      "description": "Section variables, e.g. '{V : Type*}'.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Variables",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "declaration_id",
+    "status",
+    "annotation_fingerprint",
+    "provenance"
+  ],
+  "title": "FormalizationProposal",
+  "type": "object"
+}

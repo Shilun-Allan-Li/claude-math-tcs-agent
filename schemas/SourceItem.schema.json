@@ -1,0 +1,330 @@
+{
+  "$defs": {
+    "NotationEntry": {
+      "additionalProperties": false,
+      "description": "One row of the source-notation table.\n\nReport 01 \u00a7E.4: 454 notation rows were re-derived across ten chapters, with symbols\nlike nu, epsilon, delta and omega recurring in six or more. These belong in the corpus\nregistry once, not per chapter -- but they are *observed* per chapter, so they are\ncollected here and promoted by the registry.",
+      "properties": {
+        "decided_in": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Declaration id where this mapping was fixed.",
+          "title": "Decided In"
+        },
+        "lean": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Exact Lean identifier, if resolved.",
+          "title": "Lean"
+        },
+        "meaning": {
+          "description": "What the book says it denotes.",
+          "title": "Meaning",
+          "type": "string"
+        },
+        "symbol": {
+          "description": "Source notation, verbatim, e.g. 'kappa(G)'.",
+          "title": "Symbol",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol",
+        "meaning"
+      ],
+      "title": "NotationEntry",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where an artifact came from and what it was produced against.\n\nReport 01 \u00a7B4 is the reason this exists and is required on every agent-produced\nartifact: the summer's annotations asserted repository facts with no record of the\nrepository state they were written against, and those assertions went silently false.",
+      "properties": {
+        "context_package_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ContextPackage this artifact was generated from.",
+          "title": "Context Package Id"
+        },
+        "corpus_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Corpus registry version this was generated against.",
+          "title": "Corpus Version"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "input_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fingerprint of the exact input content (staleness check).",
+          "title": "Input Fingerprint"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Model id, or None if deterministic.",
+          "title": "Model"
+        },
+        "producer": {
+          "description": "Component that produced the artifact, e.g. 'annotator'.",
+          "title": "Producer",
+          "type": "string"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Version-controlled prompt identifier, e.g. 'annotate/v1'.",
+          "title": "Prompt Version"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "LLM provider, or None for deterministic producers.",
+          "title": "Provider"
+        }
+      },
+      "required": [
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "SourceItemKind": {
+      "description": "What the textbook calls this item.\n\nKept separate from :class:`LeanDeclarationKind`: the book's `definition` may become a\nLean `def`, `abbrev`, `structure` or `Prop`, and an `exercise` may become a `theorem`.\nConflating them is how source identity gets lost (report 01 \u00a7B2).",
+      "enum": [
+        "definition",
+        "theorem",
+        "lemma",
+        "corollary",
+        "proposition",
+        "exercise",
+        "example",
+        "construction",
+        "notation",
+        "remark"
+      ],
+      "title": "SourceItemKind",
+      "type": "string"
+    },
+    "SourceSpan": {
+      "additionalProperties": false,
+      "description": "Character range inside a chapter's Markdown, plus the page it sits on.\n\nReport 01 \u00a7B1 measured the loss this prevents: the raw extraction carries 9-24\n``<!-- p.NNN -->`` markers per chapter and the annotated chapters carry **zero**, so\npage provenance died at the annotation boundary. Holding the span lets ``page`` be\n*derived* from the nearest preceding marker instead of being re-typed by an agent.",
+      "properties": {
+        "end": {
+          "minimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "pdf_page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Page number within the PDF.",
+          "title": "Pdf Page"
+        },
+        "printed_page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Page number as printed in the book.",
+          "title": "Printed Page"
+        },
+        "start": {
+          "description": "Character offset into the chapter markdown.",
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "SourceSpan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A single mathematical item as the *book* states it.\n\nDeliberately free of any Lean notion. Rule 3: source terminology, notation, numbering\nand statement identity are stored, never replaced. ``statement`` is a verbatim slice of\nthe chapter markdown -- not a paraphrase -- so that fidelity checking compares against\nthe book rather than against an agent's summary of it (report 01 \u00a7D2).",
+  "properties": {
+    "chapter": {
+      "title": "Chapter",
+      "type": "string"
+    },
+    "chapter_id": {
+      "title": "Chapter Id",
+      "type": "string"
+    },
+    "document_id": {
+      "title": "Document Id",
+      "type": "string"
+    },
+    "id": {
+      "description": "Stable declaration id from pipeline.corpus.ids.declaration_id.",
+      "title": "Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/SourceItemKind"
+    },
+    "label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Printed label, e.g. '3.2' or '1.2.8(b)'.",
+      "title": "Label"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Term the book introduces, for unlabelled definitions.",
+      "title": "Name"
+    },
+    "notation": {
+      "items": {
+        "$ref": "#/$defs/NotationEntry"
+      },
+      "title": "Notation",
+      "type": "array"
+    },
+    "proof": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Verbatim printed proof, if the book gives one.",
+      "title": "Proof"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "section": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Book section, e.g. '3.1'.",
+      "title": "Section"
+    },
+    "span": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SourceSpan"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "statement": {
+      "description": "Verbatim source text of the statement.",
+      "title": "Statement",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "document_id",
+    "chapter_id",
+    "chapter",
+    "kind",
+    "statement",
+    "provenance"
+  ],
+  "title": "SourceItem",
+  "type": "object"
+}

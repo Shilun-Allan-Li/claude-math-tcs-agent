@@ -1,0 +1,69 @@
+{
+  "section_summary": "Derives a three-term consequence of additivity, and poses two exercises.",
+  "notation": [],
+  "definitions": [],
+  "annotations": [
+    {
+      "declaration_id": "dn-ch1-thm-1.3",
+      "stated_hypotheses": ["a divides b", "a divides c"],
+      "conclusion": "a divides b + b + c",
+      "concepts": ["divisibility", "additivity"],
+      "terminology": ["divides"],
+      "informal_dependencies": [
+        {"raw_reference": "theorem 1.2", "role": "uses"}
+      ],
+      "proof_strategy": "Apply additivity twice.",
+      "proof_steps": [
+        {"index": 1, "text": "By theorem 1.2, a divides b + c.", "uses": ["theorem 1.2"]},
+        {"index": 2, "text": "Apply theorem 1.2 again to b and b + c.", "uses": ["theorem 1.2"]}
+      ],
+      "formalization_hints": [
+        "The book writes b + b + c; Lean's + is left-associative, so (b + b) + c is the faithful reading and the proof reassociates."
+      ],
+      "mathlib_candidates": [{"name": "dvd_add", "status": "exists", "note": null}],
+      "local_definition_hints": ["divides"],
+      "figure_dependencies": [],
+      "difficulty": 14,
+      "route": "inline",
+      "questions": []
+    },
+    {
+      "declaration_id": "dn-ch1-ex-1.2.1",
+      "stated_hypotheses": [],
+      "conclusion": "a divides 0 for every a",
+      "concepts": ["divisibility"],
+      "terminology": ["divides"],
+      "informal_dependencies": [],
+      "proof_strategy": null,
+      "proof_steps": [],
+      "formalization_hints": ["Witness q = 0."],
+      "mathlib_candidates": [{"name": "dvd_zero", "status": "exists", "note": null}],
+      "local_definition_hints": ["divides"],
+      "figure_dependencies": [],
+      "difficulty": 5,
+      "route": "inline",
+      "questions": []
+    },
+    {
+      "declaration_id": "dn-ch1-ex-1.2.2",
+      "stated_hypotheses": ["a divides b", "b divides a"],
+      "conclusion": "a = b",
+      "concepts": ["divisibility", "antisymmetry"],
+      "terminology": ["divides"],
+      "informal_dependencies": [],
+      "proof_strategy": null,
+      "proof_steps": [],
+      "formalization_hints": [
+        "True over the naturals but NOT over the integers, where it gives a = ±b. The carrier matters."
+      ],
+      "mathlib_candidates": [{"name": "Nat.dvd_antisymm", "status": "exists", "note": null}],
+      "local_definition_hints": ["divides"],
+      "figure_dependencies": [],
+      "difficulty": 12,
+      "route": "inline",
+      "questions": [
+        {"question": "The book states this over the naturals; is the intended carrier ever the integers?", "blocks_formalization": false}
+      ]
+    }
+  ]
+}

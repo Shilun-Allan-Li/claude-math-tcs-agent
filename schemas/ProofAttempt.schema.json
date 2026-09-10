@@ -1,0 +1,441 @@
+{
+  "$defs": {
+    "HelperOrigin": {
+      "description": "Why a helper lemma exists (report 04 \u00a7F). Determines where it should live.",
+      "enum": [
+        "book_implicit",
+        "lean_infrastructure",
+        "mathlib_gap",
+        "decomposition"
+      ],
+      "title": "HelperOrigin",
+      "type": "string"
+    },
+    "LeanDiagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Column"
+        },
+        "failure_class": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "surface:name | surface:coercion-form | surface:namespace | surface:arg-order | surface:motive | surface:instance-mismatch | math:strategy | other. Seeded from the seven classes measured in log/connectivity-PIPELINE_REPORT.md, where 9 of ~15 build cycles were surface friction and 0 were mathematical.",
+          "title": "Failure Class"
+        },
+        "file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "File"
+        },
+        "line": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "description": "error | warning | information",
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "severity",
+        "message"
+      ],
+      "title": "LeanDiagnostic",
+      "type": "object"
+    },
+    "ProofOutcome": {
+      "enum": [
+        "success",
+        "fail",
+        "escalate",
+        "STATEMENT_REVIEW_REQUIRED",
+        "budget_exceeded"
+      ],
+      "title": "ProofOutcome",
+      "type": "string"
+    },
+    "ProposedHelper": {
+      "additionalProperties": false,
+      "description": "A helper lemma the worker invented. It becomes a graph node or it is lost.\n\nReport 04 \u00a7B6: two helpers invented mid-proof in July had no identity and were erased\nby the August regeneration.",
+      "properties": {
+        "lean_name": {
+          "title": "Lean Name",
+          "type": "string"
+        },
+        "origin": {
+          "$ref": "#/$defs/HelperOrigin"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "lean_name",
+        "statement",
+        "origin",
+        "rationale"
+      ],
+      "title": "ProposedHelper",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Where an artifact came from and what it was produced against.\n\nReport 01 \u00a7B4 is the reason this exists and is required on every agent-produced\nartifact: the summer's annotations asserted repository facts with no record of the\nrepository state they were written against, and those assertions went silently false.",
+      "properties": {
+        "context_package_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ContextPackage this artifact was generated from.",
+          "title": "Context Package Id"
+        },
+        "corpus_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Corpus registry version this was generated against.",
+          "title": "Corpus Version"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "input_fingerprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fingerprint of the exact input content (staleness check).",
+          "title": "Input Fingerprint"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Model id, or None if deterministic.",
+          "title": "Model"
+        },
+        "producer": {
+          "description": "Component that produced the artifact, e.g. 'annotator'.",
+          "title": "Producer",
+          "type": "string"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Version-controlled prompt identifier, e.g. 'annotate/v1'.",
+          "title": "Prompt Version"
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "LLM provider, or None for deterministic producers.",
+          "title": "Provider"
+        }
+      },
+      "required": [
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "RetrievedDeclaration": {
+      "additionalProperties": false,
+      "description": "Something the context builder supplied, and whether the worker used it.\n\n``used`` is how the value of retrieval becomes measurable: the summer's one cached\nMathlib survey cost 86,999 tokens and nothing recorded which entries earned it.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "source": {
+          "description": "project | mathlib",
+          "title": "Source",
+          "type": "string"
+        },
+        "used": {
+          "default": false,
+          "title": "Used",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "source"
+      ],
+      "title": "RetrievedDeclaration",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approved_statement_fingerprint": {
+      "description": "Pins the statement the worker was given; makes rule 7 checkable.",
+      "title": "Approved Statement Fingerprint",
+      "type": "string"
+    },
+    "attempt": {
+      "minimum": 1,
+      "title": "Attempt",
+      "type": "integer"
+    },
+    "context_chars": {
+      "description": "Must not grow with attempt number; the repair budget is fixed.",
+      "minimum": 0,
+      "title": "Context Chars",
+      "type": "integer"
+    },
+    "context_package_id": {
+      "title": "Context Package Id",
+      "type": "string"
+    },
+    "declaration_id": {
+      "title": "Declaration Id",
+      "type": "string"
+    },
+    "diagnostics": {
+      "items": {
+        "$ref": "#/$defs/LeanDiagnostic"
+      },
+      "title": "Diagnostics",
+      "type": "array"
+    },
+    "failure_class": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Failure Class"
+    },
+    "generated_proof": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Generated Proof"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "input_tokens": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Input Tokens"
+    },
+    "lean_status": {
+      "default": "not_run",
+      "description": "ok | error | not_run",
+      "title": "Lean Status",
+      "type": "string"
+    },
+    "outcome": {
+      "$ref": "#/$defs/ProofOutcome"
+    },
+    "output_tokens": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Output Tokens"
+    },
+    "proposed_helpers": {
+      "items": {
+        "$ref": "#/$defs/ProposedHelper"
+      },
+      "title": "Proposed Helpers",
+      "type": "array"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "resulting_goals": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Resulting Goals",
+      "type": "array"
+    },
+    "retrieved_declarations": {
+      "items": {
+        "$ref": "#/$defs/RetrievedDeclaration"
+      },
+      "title": "Retrieved Declarations",
+      "type": "array"
+    },
+    "review_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Required when outcome is STATEMENT_REVIEW_REQUIRED.",
+      "title": "Review Reason"
+    },
+    "role": {
+      "default": "proof_worker",
+      "description": "proof_worker | repair_worker",
+      "title": "Role",
+      "type": "string"
+    },
+    "strategy": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Strategy"
+    },
+    "usd": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Usd"
+    },
+    "wall_ms": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Wall Ms"
+    }
+  },
+  "required": [
+    "id",
+    "declaration_id",
+    "attempt",
+    "approved_statement_fingerprint",
+    "context_package_id",
+    "context_chars",
+    "outcome",
+    "provenance"
+  ],
+  "title": "ProofAttempt",
+  "type": "object"
+}

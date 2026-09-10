@@ -1,0 +1,21 @@
+{
+  "corpus": "demo-naturals",
+  "slug": "dn",
+  "title": "Elementary Divisibility (demo corpus)",
+  "authors": [
+    "math-tcs-pipeline"
+  ],
+  "source_type": "notes",
+  "note": "The public regression corpus. Deliberately tiny and deliberately not the same mathematics as any production corpus: it exists to detect domain coupling in the engine. Written for this repository, so it carries no third-party licence.",
+  "divisions": [
+    {
+      "number": "1",
+      "type": "unit",
+      "title": "Divisibility",
+      "markdown": "examples/demo-corpus/source/01_unit-1-divisibility.md",
+      "pdf_page_start": 1,
+      "pdf_page_end": 2,
+      "printed_page_offset": 0
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "artifact": "SourceDocument",
+    "schema": "SourceDocument.schema.json",
+    "title": "A book. Identity is its corpus slug; ``sha256`` detects a changed source file."
+  },
+  {
+    "artifact": "SourceChapter",
+    "schema": "SourceChapter.schema.json",
+    "title": "One chapter of Markdown, with the page range it was merged from."
+  },
+  {
+    "artifact": "SourceItem",
+    "schema": "SourceItem.schema.json",
+    "title": "A single mathematical item as the *book* states it."
+  },
+  {
+    "artifact": "AnnotatedDeclaration",
+    "schema": "AnnotatedDeclaration.schema.json",
+    "title": "Machine-readable annotation for exactly one source item."
+  },
+  {
+    "artifact": "FormalizationProposal",
+    "schema": "FormalizationProposal.schema.json",
+    "title": "A proposed Lean declaration for one annotated declaration."
+  },
+  {
+    "artifact": "SourceLeanMapping",
+    "schema": "SourceLeanMapping.schema.json",
+    "title": ""
+  },
+  {
+    "artifact": "DependencyEdge",
+    "schema": "DependencyEdge.schema.json",
+    "title": ""
+  },
+  {
+    "artifact": "CheckerFinding",
+    "schema": "CheckerFinding.schema.json",
+    "title": ""
+  },
+  {
+    "artifact": "ReviewDecision",
+    "schema": "ReviewDecision.schema.json",
+    "title": "One human decision, recorded immutably."
+  },
+  {
+    "artifact": "ProofAttempt",
+    "schema": "ProofAttempt.schema.json",
+    "title": ""
+  },
+  {
+    "artifact": "ContextPackage",
+    "schema": "ContextPackage.schema.json",
+    "title": ""
+  },
+  {
+    "artifact": "StageRun",
+    "schema": "StageRun.schema.json",
+    "title": ""
+  },
+  {
+    "artifact": "DeclarationRecord",
+    "schema": "DeclarationRecord.schema.json",
+    "title": "The aggregate. ``id`` is source-derived and never changes."
+  },
+  {
+    "artifact": "PipelineRun",
+    "schema": "PipelineRun.schema.json",
+    "title": "One invocation of the pipeline over a set of declarations."
+  }
+]

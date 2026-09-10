@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "MappingType": {
+      "description": "How a Lean expression differs in form from its source expression.",
+      "enum": [
+        "notation",
+        "renaming",
+        "representation",
+        "specialization",
+        "generalization",
+        "semantic_deviation",
+        "uncertain"
+      ],
+      "title": "MappingType",
+      "type": "string"
+    },
+    "SemanticStatus": {
+      "description": "Whether the Lean form means the same thing as the source form.",
+      "enum": [
+        "equivalent",
+        "likely_equivalent",
+        "not_equivalent",
+        "uncertain"
+      ],
+      "title": "SemanticStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "aspect": {
+      "description": "What is being mapped, e.g. 'edge cut' or 'the carrier type'.",
+      "title": "Aspect",
+      "type": "string"
+    },
+    "confidence": {
+      "default": 1.0,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "declaration_id": {
+      "title": "Declaration Id",
+      "type": "string"
+    },
+    "declared_by_producer": {
+      "default": true,
+      "description": "True when the formalizer itself declared the divergence. A checker finding that merely confirms a declared mapping is an audit trail entry, not a defect -- this is what keeps the fidelity checker's false-positive rate usable.",
+      "title": "Declared By Producer",
+      "type": "boolean"
+    },
+    "id": {
+      "description": "Stable within a declaration: '<declaration_id>/m<N>'.",
+      "title": "Id",
+      "type": "string"
+    },
+    "justification": {
+      "description": "Why the change is sound, in the producer's own words. Report 02 \u00a7C1: the summer wrote these as '## In Lean notation' docstring sections and they are the single most valuable artifact in the corpus -- the container was the problem, not the practice.",
+      "title": "Justification",
+      "type": "string"
+    },
+    "lean_form": {
+      "description": "The Lean form.",
+      "title": "Lean Form",
+      "type": "string"
+    },
+    "mapping_type": {
+      "$ref": "#/$defs/MappingType"
+    },
+    "semantic_status": {
+      "$ref": "#/$defs/SemanticStatus"
+    },
+    "source_form": {
+      "description": "The book's form, verbatim where possible.",
+      "title": "Source Form",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "declaration_id",
+    "aspect",
+    "source_form",
+    "lean_form",
+    "mapping_type",
+    "semantic_status",
+    "justification"
+  ],
+  "title": "SourceLeanMapping",
+  "type": "object"
+}
