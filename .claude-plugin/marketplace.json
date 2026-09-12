@@ -1,0 +1,14 @@
+{
+  "name": "math-tcs-local",
+  "owner": { "name": "Angela Wu" },
+  "metadata": { "description": "Local marketplace for the math-tcs formalization plugin", "version": "0.1.0" },
+  "plugins": [
+    {
+      "name": "math-tcs",
+      "source": "./plugins/math-tcs",
+      "description": "Mathematics/TCS source → annotated Markdown → Lean scaffold → verified proofs, via Claude Code skills, agents, and a scripted workflow coordinator",
+      "version": "0.1.0",
+      "keywords": ["lean", "mathlib", "formalization", "workflow"]
+    }
+  ]
+}

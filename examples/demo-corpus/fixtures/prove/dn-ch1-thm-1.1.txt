@@ -1,6 +1,0 @@
-```lean
-unfold Divides at hab hbc ⊢
-obtain ⟨q, rfl⟩ := hab
-obtain ⟨r, rfl⟩ := hbc
-exact ⟨q * r, Nat.mul_assoc a q r⟩
-```

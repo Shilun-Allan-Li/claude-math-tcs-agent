@@ -1,0 +1,8 @@
+{
+  "name": "math-tcs",
+  "version": "0.1.0",
+  "description": "Translate → scaffold → verify → prove: mathematics/TCS sources into verified Lean 4, with a scripted workflow coordinator",
+  "author": { "name": "Angela Wu" },
+  "license": "MIT",
+  "keywords": ["lean", "lean4", "mathlib", "formalization", "workflow", "math", "tcs"]
+}

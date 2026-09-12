@@ -1,24 +1,5 @@
-# ------------------------------------------------------------------ build output
-/.lake/
-/data/
-
-# --------------------------------------------------------- private research corpora
-# The engine is public; the corpora it is pointed at are not. Anything attached
-# locally lives under these paths and never enters the repository. Only the demo
-# corpus under examples/ is committed.
-/sources/
-/corpora/*
-!/corpora/demo-naturals.json
-/fixtures/
-/private/
-
-# ---------------------------------------------------------------------- python
 __pycache__/
 *.py[cod]
-.venv/
-*.egg-info/
 .pytest_cache/
-.coverage
-htmlcov/
-
+plugins/math-tcs/tests/_run_check.mjs
 .DS_Store

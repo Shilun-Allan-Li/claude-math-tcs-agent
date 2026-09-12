@@ -1,1 +1,0 @@
-{"artifact_fingerprint":"5ed8bd3b607d358a37392b59e9df93219c32dcd3663dd09b30e22cd489967b4a","created_at":"2026-09-10T03:49:36.080319Z","declaration_id":"dn-ch1-thm-1.1","findings_reviewed":["f-f6c21c8fb94aa3cd"],"id":"rv-0e9ad4d98801e5af","rationale":"Transitivity of divisibility; the Lean statement matches the source.","reviewer":"demo","status":"APPROVED","superseded_by":null}
