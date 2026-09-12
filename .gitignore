@@ -3,3 +3,5 @@ __pycache__/
 .pytest_cache/
 plugins/math-tcs/tests/_run_check.mjs
 .DS_Store
+
+pipeline_kickoff_plan.md
