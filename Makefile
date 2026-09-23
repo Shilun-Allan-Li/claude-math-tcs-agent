@@ -1,12 +1,13 @@
 PLUGIN := plugins/math-tcs
 MARKET := $(CURDIR)
 TARGET ?=
-TARGET_ABS = $(if $(strip $(TARGET)),$(abspath $(TARGET)),)
+TARGET_ABS = $(shell cd "$(TARGET)" 2>/dev/null && pwd)
+.DEFAULT_GOAL := validate
 
 .PHONY: validate test test-lean dev install update uninstall demo-run clean-target require-target
 
 require-target:
-	@test -n "$(TARGET)" && test -f "$(TARGET_ABS)/lean-toolchain" || { echo 'Set TARGET to your Lean project: make $@ TARGET="/path/to/project"' >&2; exit 1; }
+	@test -n "$(TARGET)" && test -f "$(TARGET_ABS)/lean-toolchain" || { echo 'Set TARGET to an existing Lean project, e.g. make dev TARGET="/path/to/project"' >&2; exit 1; }
 
 validate:            ## validate plugin + marketplace manifests strictly
 	claude plugin validate $(PLUGIN) --strict

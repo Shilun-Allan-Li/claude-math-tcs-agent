@@ -2,7 +2,7 @@
 
 ## Completed locally
 
-Final run: **60 non-Lean tests passed; 5 new real Lean integration tests passed**.
+Final run: **62 non-Lean tests passed; 5 new real Lean integration tests passed**.
 The four legacy Lean tests were not run. Plugin and marketplace validation passed.
 
 - Unit/regression tests cover task ownership, incomplete reviews, uncertainty, old snapshot
@@ -17,6 +17,11 @@ The four legacy Lean tests were not run. Plugin and marketplace validation passe
   unfinished theorem and simplification of an existing proof by reusing `Nat.zero_add`.
 - Claude plugin strict validation, the Codex plugin schema validator, and the three new
   skill validators pass. Hook tests verify read-only behavior and malformed-input handling.
+- Portability tests copy the plugin to a different directory containing spaces and Unicode,
+  invoke its CLI from a separate Lean project's subdirectory, execute both hook commands,
+  and resolve the shared skill references. Makefile checks cover a relocated checkout,
+  a relative target path with spaces, and rejection of a missing target. These tests do
+  not install a plugin or call a model service.
 
 These tests validate mechanics. Their fixture semantic reviews are not evidence of model
 fidelity, and their fixture tactics are not evidence of agent proof-solving performance.
