@@ -1,7 +1,7 @@
 ---
 name: ping
 description: Diagnostic for the math-tcs plugin — shows how the plugin sees its arguments, plugin root, and agents. Use when the user runs /math-tcs:ping.
-argument-hint: [any words] [--until stage]
+argument-hint: "[any words] [--until stage]"
 allowed-tools: Bash(python3 *mathtcs.py*), Bash(echo *)
 ---
 

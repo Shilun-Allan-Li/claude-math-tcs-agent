@@ -5,3 +5,5 @@ plugins/math-tcs/tests/_run_check.mjs
 .DS_Store
 
 pipeline_kickoff_plan.md
+REVIEW_FEEDBACK.md
+IMPLEMENTATION_PLAN.md

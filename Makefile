@@ -1,8 +1,12 @@
 PLUGIN := plugins/math-tcs
-MARKET := /Users/rxw/Desktop/projects/research/claude-math-tcs-agent
-TARGET ?= $(HOME)/Desktop/projects/research/tcslib
+MARKET := $(CURDIR)
+TARGET ?=
+TARGET_ABS = $(if $(strip $(TARGET)),$(abspath $(TARGET)),)
 
-.PHONY: validate test test-lean dev install update uninstall demo-run clean-target
+.PHONY: validate test test-lean dev install update uninstall demo-run clean-target require-target
+
+require-target:
+	@test -n "$(TARGET)" && test -f "$(TARGET_ABS)/lean-toolchain" || { echo 'Set TARGET to your Lean project: make $@ TARGET="/path/to/project"' >&2; exit 1; }
 
 validate:            ## validate plugin + marketplace manifests strictly
 	claude plugin validate $(PLUGIN) --strict
@@ -11,14 +15,14 @@ validate:            ## validate plugin + marketplace manifests strictly
 test:                ## unit tests (no Lean)
 	cd $(PLUGIN)/tests && python3 -m pytest -q -m "not lean"
 
-test-lean:           ## Lean-backed tests against $(TARGET)
-	cd $(PLUGIN)/tests && MATH_TCS_TEST_PROJECT=$(TARGET) python3 -m pytest -q -m lean
+test-lean: require-target  ## Lean-backed tests against an explicitly chosen project
+	cd "$(PLUGIN)/tests" && MATH_TCS_TEST_PROJECT="$(TARGET_ABS)" python3 -m pytest -q -m lean
 
-dev:                 ## start Claude Code in the target with the plugin loaded from this checkout
-	cd $(TARGET) && claude --plugin-dir $(MARKET)/$(PLUGIN)
+dev: require-target   ## start Claude Code in the target with this checkout loaded
+	cd "$(TARGET_ABS)" && claude --plugin-dir "$(MARKET)/$(PLUGIN)"
 
 install:             ## persistent install (user scope) from this checkout as a local marketplace
-	claude plugin marketplace add $(MARKET) || true
+	claude plugin marketplace add "$(MARKET)"
 	claude plugin install math-tcs@math-tcs-local --scope user
 
 update:              ## after bumping version in both manifests
@@ -28,5 +32,5 @@ update:              ## after bumping version in both manifests
 uninstall:
 	claude plugin uninstall math-tcs@math-tcs-local
 
-clean-target:        ## remove demo artifacts from the target (keeps config)
-	rm -rf $(TARGET)/math-tcs/scratch $(TARGET)/math-tcs/locks $(TARGET)/math-tcs/context
+clean-target: require-target  ## remove legacy demo artifacts from the chosen target
+	rm -rf "$(TARGET_ABS)/math-tcs/scratch" "$(TARGET_ABS)/math-tcs/locks" "$(TARGET_ABS)/math-tcs/context"

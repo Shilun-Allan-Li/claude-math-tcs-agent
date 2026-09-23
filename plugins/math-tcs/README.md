@@ -1,5 +1,17 @@
 # math-tcs — Claude Code plugin
 
+## Everyday Lean assistant (Claude Code and Codex)
+
+Use the new `formalize`, `review`, and `simplify` skills for individual declarations in
+ordinary Lean files. They use dedicated formalizer/reviewer/proof-worker roles and a Python
+harness with snapshot-bound review, proof-slot containment, bounded attempts, and independent
+Lean acceptance checks. [Setup, commands, and limits](docs/everyday.md).
+
+**The remaining documentation describes the older experimental Claude-only batch pipeline.**
+Claims below about parallel writers, complete demos, and selective reruns are design intent;
+the review in the repository identifies outstanding implementation limitations. The new
+everyday workflow does not use that manifest or promotion path.
+
 Translate → scaffold → verify → prove: a mathematics/TCS source excerpt becomes annotated
 Markdown, then a Lean 4 module with `sorry` stubs in your project's layout, then reviewed
 statements, then proofs that are promoted only when `#print axioms` shows no `sorryAx` and
@@ -37,18 +49,17 @@ claude plugin validate plugins/math-tcs --strict
 claude plugin validate . --strict          # the local marketplace manifest
 ```
 
-**Development loading (not persistent).** From inside your Lean project:
+**Development loading (not persistent).** From this repository's root:
 
 ```bash
-cd ~/Desktop/projects/research/tcslib
-claude --plugin-dir /Users/rxw/Desktop/projects/research/claude-math-tcs-agent/plugins/math-tcs
+make dev TARGET="/path/to/your Lean project"
 # edit the plugin, then in the session: /reload-plugins
 ```
 
 **Persistent installation** (this repository is a local marketplace named `math-tcs-local`):
 
 ```bash
-claude plugin marketplace add /Users/rxw/Desktop/projects/research/claude-math-tcs-agent
+claude plugin marketplace add .   # run from this repository's root
 claude plugin install math-tcs@math-tcs-local --scope user      # or --scope project|local
 # restart Claude Code, then:
 claude plugin list
@@ -166,7 +177,7 @@ Resume an interrupted run with the printed `runId` (`Workflow({scriptPath, resum
 ```bash
 cd plugins/math-tcs/tests
 python3 -m pytest -q -m "not lean"                      # unit: args, ids, extraction, IR, blocks, manifest, action rules, run.js static
-MATH_TCS_TEST_PROJECT=~/Desktop/projects/research/tcslib python3 -m pytest -q -m lean
+MATH_TCS_TEST_PROJECT="/path/to/your Lean project" python3 -m pytest -q -m lean
 ```
 
 The Lean tests write a throwaway module (`math-tcs-test/`) and, for the scripts-only end-to-end test, a

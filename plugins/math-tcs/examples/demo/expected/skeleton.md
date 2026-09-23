@@ -3,7 +3,7 @@ math-tcs: annotated/v1
 slug: dn
 chapter: 1
 title: Unit 1 — Divisibility
-source_path: /Users/rxw/Desktop/projects/research/claude-math-tcs-agent/plugins/math-tcs/examples/demo/source/01_unit-1-divisibility.md
+source_path: examples/demo/source/01_unit-1-divisibility.md
 source_sha256: ed191e2c602e59092a05ef88e6eacbb07ac6107241bb7950619535d6ca72fc8b
 ---
 # Unit 1 — Divisibility
@@ -175,4 +175,3 @@ _No proof in source._
 ### Source proof (verbatim)
 _No proof in source._
 ### Interpretation (agent)
-

@@ -48,11 +48,11 @@ def fake_project(tmp_path: Path) -> Path:
 
 def _lean_project() -> Path | None:
     env = os.environ.get("MATH_TCS_TEST_PROJECT")
-    candidates = [env] if env else [os.path.expanduser("~/Desktop/projects/research/tcslib")]
+    candidates = [env] if env else []
     for c in candidates:
         if not c:
             continue
-        p = Path(c)
+        p = Path(c).expanduser().resolve()
         if (p / "lean-toolchain").exists() and (p / ".lake" / "packages" / "mathlib").exists() and shutil.which("lake"):
             return p
     return None

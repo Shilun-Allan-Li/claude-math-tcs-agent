@@ -285,7 +285,7 @@ def _entry(**kw):
 
 
 OK_ELAB = {"ok": True, "trust": "DIRECT_SORRY", "diagnostics": []}
-SEM_OK = {"status": "ok", "fidelity_findings": [], "degenerate_case_findings": []}
+SEM_OK = {"status": "ok", "verdict": "faithful", "fidelity_findings": [], "degenerate_case_findings": []}
 REUSE_NF = {"status": "ok", "verdict": "not_found", "candidates": []}
 
 
@@ -294,7 +294,7 @@ def test_decide_rules():
     assert _decide(_entry(), {"ok": True, "trust": "NONSTANDARD_AXIOM", "diagnostics": []}, SEM_OK, REUSE_NF, [])["action"] == "repair_statement"
     sem_fail = {"status": "ok", "fidelity_findings": [{"status": "fail", "severity": "high", "confidence": 0.9, "category": "MISSING_ASSUMPTION", "message": "m"}], "degenerate_case_findings": []}
     assert _decide(_entry(), OK_ELAB, sem_fail, REUSE_NF, [])["action"] == "repair_statement"
-    sem_low = {"status": "ok", "fidelity_findings": [{"status": "fail", "severity": "high", "confidence": 0.3}], "degenerate_case_findings": []}
+    sem_low = {"status": "ok", "verdict": "faithful", "fidelity_findings": [{"status": "fail", "severity": "high", "confidence": 0.3}], "degenerate_case_findings": []}
     assert _decide(_entry(), OK_ELAB, sem_low, REUSE_NF, [])["action"] == "prove"
     sem_false = {"status": "ok", "fidelity_findings": [], "degenerate_case_findings": [{"outcome": "false", "category": "ZERO_PARAMETER"}]}
     assert _decide(_entry(), OK_ELAB, sem_false, REUSE_NF, [])["action"] == "repair_statement"

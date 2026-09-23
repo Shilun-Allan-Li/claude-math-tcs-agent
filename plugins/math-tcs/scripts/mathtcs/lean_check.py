@@ -10,6 +10,7 @@ same run. The canonical module is never touched here.
 from __future__ import annotations
 
 import os
+import signal
 import subprocess
 import time
 from pathlib import Path
@@ -40,13 +41,24 @@ def run_lean(root: Path, file: Path, *, mode: str = "lake lean", timeout: float 
         cmd = ["lake", "env", "lean", "--json", str(file)]
     started = time.monotonic()
     try:
-        proc = subprocess.run(cmd, cwd=str(root), capture_output=True, text=True, timeout=timeout)
+        # Kill the Lake/Lean process group on timeout, not only the Lake parent.
+        with subprocess.Popen(cmd, cwd=str(root), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                              text=True, start_new_session=True) as proc:
+            try:
+                stdout, stderr = proc.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                try:
+                    os.killpg(proc.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                proc.communicate()
+                raise
     except subprocess.TimeoutExpired as exc:
         return {"exit": None, "timeout": True, "command": cmd, "wall_ms": int((time.monotonic() - started) * 1000),
                 "diagnostics": [], "noise": [f"timeout after {timeout}s"], "stdout": (exc.stdout or "")[-4000:] if isinstance(exc.stdout, str) else ""}
     except FileNotFoundError as exc:
         raise MathTcsError(f"lake not found on PATH ({exc})", code=2)
-    output = (proc.stdout or "") + ("\n" + proc.stderr if proc.stderr else "")
+    output = (stdout or "") + ("\n" + stderr if stderr else "")
     diags, noise = parse_lean_json(output)
     if mode == "lake lean" and proc.returncode != 0 and not diags and any("unknown" in n.lower() or "error" in n.lower() for n in noise):
         # Lake refused the invocation itself (e.g. no `lake lean` support): fall back once.

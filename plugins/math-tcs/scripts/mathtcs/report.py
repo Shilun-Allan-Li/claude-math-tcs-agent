@@ -123,9 +123,15 @@ def _load_review(rdir: Path, name: str, expect_sha: str | None) -> dict:
         return {"kind": "model_review", "status": "invalid", "reason": f"{name}.json is not an object", "findings": []}
     got = obj.get("statement_sha256")
     obj.setdefault("kind", "model_review")
-    if expect_sha and got and got != expect_sha:
+    if not isinstance(got, str) or not got or not expect_sha or got != expect_sha:
         obj["status"] = "revision_mismatch"
-        obj["reason"] = f"reviewed statement_sha256 {got[:12]} ≠ snapshot {expect_sha[:12]}"
+        obj["reason"] = "review must identify the exact nonempty snapshot hash"
+    elif name == "semantic" and (
+        obj.get("verdict") not in {"faithful", "divergent", "uncertain"}
+        or not isinstance(obj.get("fidelity_findings"), list)
+        or not isinstance(obj.get("degenerate_case_findings"), list)
+    ):
+        obj.update(status="invalid", reason="incomplete semantic review")
     else:
         obj.setdefault("status", "ok")
     return obj
@@ -159,6 +165,8 @@ def _decide(entry: dict, elab: dict | None, sem: dict, reuse: dict, blocked_dep_
     if sem.get("status") != "ok":
         return {"action": "defer", "reason": f"semantic review {sem.get('status')}: {sem.get('reason', '')}",
                 "evidence": [], "priority": "normal", "reuse_hint": None}
+    if sem.get("verdict") != "faithful":
+        return {"action": "defer", "reason": "semantic fidelity is not established", "evidence": [], "priority": "normal", "reuse_hint": None}
     if reuse.get("status") == "ok":
         verdict = reuse.get("verdict")
         cands = reuse.get("candidates", []) or []

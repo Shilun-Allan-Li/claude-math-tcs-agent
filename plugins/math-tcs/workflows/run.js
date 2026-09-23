@@ -276,7 +276,7 @@ const verifyResults = await pipeline(scaffoldedIds,
     const c = await run(`${mtc(`report combine ${q(id)} --rev ${both.snap.rev} --at ${q(NOW)}`)}`, { label: `combine:${id}`, phase: 'Verify', files })
     const cj = J(c)
     if (!cj || c.exit !== 0) { mark(id, 'verify', 'failed', { reason: `combine failed: ${why(c)}`, semantic: both.sem ? 'ok' : 'missing', reuse: both.reuse ? 'ok' : 'missing' }); return null }
-    mark(id, 'verify', 'ok', { action: cj.action, reason: cj.reason, elaboration_ok: cj.elaboration_ok, trust: cj.trust, semantic: cj.semantic, reuse: cj.reuse, report: cj.report, md: cj.md, status: cj.status, rev: cj.rev })
+    mark(id, 'verify', 'ok', { action: cj.action, reason: cj.reason, elaboration_ok: cj.elaboration_ok, trust: cj.trust, semantic: cj.semantic, reuse: cj.reuse, report: cj.report, md: cj.md, declaration_status: cj.status, rev: cj.rev })
     return cj
   },
 )

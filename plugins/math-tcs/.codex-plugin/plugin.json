@@ -1,0 +1,17 @@
+{
+  "name": "math-tcs",
+  "version": "0.2.0",
+  "description": "Lean formalization agents with reviewed statements and independently checked proofs",
+  "author": {"name": "Angela Wu"},
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Math TCS",
+    "shortDescription": "Formalize, review, and simplify Lean proofs",
+    "longDescription": "A formalizer, semantic reviewer, and proof worker backed by a local Python harness. Works in existing Lean projects.",
+    "developerName": "Angela Wu",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Formalize a mathematical statement in this Lean project."]
+  }
+}

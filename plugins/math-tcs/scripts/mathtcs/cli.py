@@ -25,6 +25,8 @@ from .lean_check import check_module
 from .util import MathTcsError, sha256_text, write_text_atomic
 
 USAGE = """mathtcs.py <command> [args]
+  check-file F --decl Qualified.name [--decl Other.name] [--root D] [--timeout S]
+  task begin|propose|review|attempt|apply|status|abort --help
   args <stage> [tokens...]                     parse skill arguments (stage: translate|scaffold|verify|prove|run|ping)
   project detect [--root D] | init --lib L --module-prefix P [--src-dir D] [--namespace N] [--slug S] [--force]
   ids make --slug S --chapter C --kind K (--label L | --section X --ordinal N)
@@ -78,6 +80,9 @@ def main(argv: list[str]) -> int:
     cmd, rest = argv[0], list(argv[1:])
     at = _flag(rest, "--at")
     try:
+        if cmd in {"check-file", "task"}:
+            from .task_cli import main as task_main
+            return task_main([cmd, *rest])
         if cmd == "args":
             if not rest:
                 raise MathTcsError("args needs a stage", code=2)

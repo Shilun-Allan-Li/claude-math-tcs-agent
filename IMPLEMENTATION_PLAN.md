@@ -1,5 +1,10 @@
 # Implementation plan — math-tcs
 
+> Superseded for everyday use by the formalizer → semantic reviewer → proof-worker task
+> loop in `plugins/math-tcs/docs/agent-loop.md`. The historical batch plan below remains
+> experimental. Current implementation and validation limits are recorded in
+> `plugins/math-tcs/docs/everyday.md` and `plugins/math-tcs/docs/validation.md`.
+
 > Approved plan (2026-09-13). Requirements source: `pipeline_kickoff_plan.md`.
 > Status checklist is maintained at the top; the plan body below is the approved text.
 
