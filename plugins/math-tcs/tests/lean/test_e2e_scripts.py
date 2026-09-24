@@ -1,4 +1,4 @@
-"""Scripts-only end-to-end run of the demo through the CLI in a *temporary* target project
+"""Regression-only exercise of the retired stages in a *temporary* target project
 that borrows the real project's Lean environment (``lean`` marker).
 
 A throwaway project directory is created with symlinks to the target's ``.lake``,
@@ -33,7 +33,10 @@ def temp_target(lean_project, tmp_path):
 
 
 def mt(plugin_root: Path, root: Path, *argv: str) -> tuple[int, dict]:
-    r = subprocess.run([sys.executable, str(plugin_root / "scripts" / "mathtcs.py"), *argv, "--root", str(root)],
+    # Explicit internal entry point: the public CLI must never route here.
+    entry = ("import sys; sys.path.insert(0, sys.argv.pop(1)); "
+             "from mathtcs.legacy_cli import main; sys.exit(main(sys.argv[1:]))")
+    r = subprocess.run([sys.executable, "-c", entry, str(plugin_root / "scripts"), *argv, "--root", str(root)],
                        capture_output=True, text=True, cwd=str(root))
     try:
         return r.returncode, json.loads(r.stdout)

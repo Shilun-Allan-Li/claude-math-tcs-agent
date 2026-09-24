@@ -335,7 +335,7 @@ def test_runjs_static(plugin_root):
 
 
 def test_cli_smoke(plugin_root):
-    r = subprocess.run([sys.executable, str(plugin_root / "scripts" / "mathtcs.py"), "args", "run", "x.md", "--until", "scaffold"], capture_output=True, text=True)
-    assert r.returncode == 0 and json.loads(r.stdout)["stages"] == ["translate", "scaffold"]
+    r = subprocess.run([sys.executable, str(plugin_root / "scripts" / "mathtcs.py"), "task", "--help"], capture_output=True, text=True)
+    assert r.returncode == 0 and "begin" in r.stdout and "apply" in r.stdout
     r2 = subprocess.run([sys.executable, str(plugin_root / "scripts" / "mathtcs.py"), "nope"], capture_output=True, text=True)
     assert r2.returncode == 2 and "unknown command" in json.loads(r2.stdout)["error"]

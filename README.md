@@ -24,9 +24,9 @@ Open your **Lean project** in a new Codex thread. Select the plugin's `formalize
 or `simplify` skill and describe the task, for example:
 
 ```text
-Use formalize to complete Demo.my_theorem in Main.lean.
-Use review to compare Demo.my_theorem in Main.lean with its statement in notes.md.
-Use simplify on Demo.my_theorem in Main.lean without changing its statement.
+Use formalize to fill the sorry in my_theorem in Main.lean. Keep its statement unchanged.
+Use review to compare my_theorem in Main.lean with its statement in notes.md.
+Use simplify on my_theorem in Main.lean without changing its statement.
 ```
 
 ### Claude Code
@@ -42,10 +42,13 @@ Start a new session in your **Lean project**, then send one of these commands us
 own file and theorem names:
 
 ```text
-/math-tcs:formalize In Main.lean, formalize: for every natural number n, 0 + n = n.
-/math-tcs:review Compare Demo.my_theorem in Main.lean with its statement in notes.md.
-/math-tcs:simplify Simplify the proof of Demo.my_theorem in Main.lean without changing its statement.
+/math-tcs:formalize Fill the sorry in my_theorem in Main.lean. Keep its statement unchanged.
+/math-tcs:review Compare my_theorem in Main.lean with its statement in notes.md.
+/math-tcs:simplify Simplify the proof of my_theorem in Main.lean without changing its statement.
 ```
+
+Replace `Main.lean` and `my_theorem` with your own file and full theorem name (including
+its namespace, if any). No demo, textbook import, or chapter setup is required.
 
 `formalize` and `simplify` apply changes after review and Lean checks; `review` leaves your
 Lean files unchanged. The agent handles the harness commands. Task reports are saved under
@@ -53,3 +56,6 @@ Lean files unchanged. The agent handles the harness commands. Task reports are s
 
 More details: [everyday guide](plugins/math-tcs/docs/everyday.md) ·
 [validation status](plugins/math-tcs/docs/validation.md).
+
+Local harness and Lean tests pass. Live installation and agent execution in both hosts
+remain unverified; treat this as an experimental release.

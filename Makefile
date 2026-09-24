@@ -4,7 +4,7 @@ TARGET ?=
 TARGET_ABS = $(shell cd "$(TARGET)" 2>/dev/null && pwd)
 .DEFAULT_GOAL := validate
 
-.PHONY: validate test test-lean dev install update uninstall demo-run clean-target require-target
+.PHONY: validate test test-lean dev install update uninstall require-target
 
 require-target:
 	@test -n "$(TARGET)" && test -f "$(TARGET_ABS)/lean-toolchain" || { echo 'Set TARGET to an existing Lean project, e.g. make dev TARGET="/path/to/project"' >&2; exit 1; }
@@ -32,6 +32,3 @@ update:              ## after bumping version in both manifests
 
 uninstall:
 	claude plugin uninstall math-tcs@math-tcs-local
-
-clean-target: require-target  ## remove legacy demo artifacts from the chosen target
-	rm -rf "$(TARGET_ABS)/math-tcs/scratch" "$(TARGET_ABS)/math-tcs/locks" "$(TARGET_ABS)/math-tcs/context"

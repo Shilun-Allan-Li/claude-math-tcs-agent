@@ -8,4 +8,6 @@ Coordinate its formalize loop using the shared Python harness. This skill is the
 the formalizer and proof worker do the mathematics, and a separate reviewer checks fidelity.
 Work on one user-selected declaration at a time. Ask only when ambiguity affects meaning or
 the requested edit range. Preserve unrelated edits and use `task apply` for canonical writes.
+For an existing `sorry`, preserve the statement and select only its proof term unless the
+user explicitly requested a statement change. No textbook or chapter setup is required.
 Default to four proof attempts and at most two statement repairs; report unresolved work.

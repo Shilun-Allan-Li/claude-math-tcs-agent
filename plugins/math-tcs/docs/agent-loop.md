@@ -6,6 +6,9 @@ and `math-tcs:lean-proof-worker`. On Codex create separate read-only workers usi
 agent Markdown bodies as instructions. If delegation is unavailable, report that limitation;
 do not silently substitute self-review and claim independent review.
 
+All three skills use this protocol, not the retired batch stages, manifest, or promotion
+commands. The public `mathtcs.py` exposes only `task`, `check-file`, and `project detect`.
+
 Resolve this document's parent plugin directory. `MT` below means
 `python3 <absolute-plugin-root>/scripts/mathtcs.py`. Pass argument arrays where possible and
 quote paths for shell calls. Invoke from the target project or provide `--root <project>`.

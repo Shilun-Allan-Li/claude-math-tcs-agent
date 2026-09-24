@@ -1,8 +1,8 @@
-# Validation record — 2026-09-23
+# Validation record — 2026-09-24
 
 ## Completed locally
 
-Final run: **62 non-Lean tests passed; 5 new real Lean integration tests passed**.
+Final run: **76 non-Lean tests passed; 7 real Lean integration tests passed**.
 The four legacy Lean tests were not run. Plugin and marketplace validation passed.
 
 - Unit/regression tests cover task ownership, incomplete reviews, uncertainty, old snapshot
@@ -22,6 +22,15 @@ The four legacy Lean tests were not run. Plugin and marketplace validation passe
   and resolve the shared skill references. Makefile checks cover a relocated checkout,
   a relative target path with spaces, and rejection of a missing target. These tests do
   not install a plugin or call a model service.
+- Public discovery now exposes only `formalize`, `review`, `simplify`, and their three
+  `lean-*` workers. The public CLI rejects retired stage commands without writing artifacts.
+- Two additional real Lean tests invoke the public CLI as subprocesses for existing-sorry
+  completion and proof simplification: begin → propose → review → failed attempt → passing
+  attempt → apply → check-file → status. They verify preservation of surrounding source,
+  refusal of `sorry`, durable task reports, and absence of legacy stage artifacts.
+- The old user-facing demo and batch skills/agents were removed. Example data needed by
+  regression tests lives under `tests/fixtures/legacy`; the old CLI is an internal module
+  used explicitly by legacy tests, not a route in the public entry point.
 
 These tests validate mechanics. Their fixture semantic reviews are not evidence of model
 fidelity, and their fixture tactics are not evidence of agent proof-solving performance.

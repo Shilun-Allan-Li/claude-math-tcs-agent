@@ -9,8 +9,8 @@ import pytest
 PLUGIN = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PLUGIN / "scripts"))
 
-DEMO_SOURCE = PLUGIN / "examples" / "demo" / "source" / "01_unit-1-divisibility.md"
-EXPECTED = PLUGIN / "examples" / "demo" / "expected"
+DEMO_SOURCE = PLUGIN / "tests" / "fixtures" / "legacy" / "source" / "01_unit-1-divisibility.md"
+EXPECTED = PLUGIN / "tests" / "fixtures" / "legacy" / "expected"
 
 
 def pytest_configure(config):

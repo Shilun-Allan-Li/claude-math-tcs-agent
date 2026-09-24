@@ -30,7 +30,8 @@ using it as a local marketplace. To move it later, update the marketplace regist
 
 Codex: select the formalize, review, or simplify skill in the new thread.
 Claude Code: use `/math-tcs:formalize`, `/math-tcs:review`, or `/math-tcs:simplify`.
-The older stage skills are Claude-only even if the host lists them.
+Only these three skills are exposed. If an installed copy still lists older stage skills,
+it is an older package; refresh that installation and start a new session.
 No user settings, personal marketplace, or hook trust entries are changed by this checkout.
 Review and trust the installed hooks through the host UI before expecting automatic guidance.
 
@@ -54,8 +55,8 @@ Run from the project root; replace `MT` with `python3 /absolute/plugin/scripts/m
 All task commands also accept `--root /absolute/project`.
 
 ```
-MT check-file Main.lean --decl Demo.theorem_name --timeout 120
-MT task begin --file Main.lean --source source.md --decl Demo.theorem_name --start 0 --end 0
+MT check-file Main.lean --decl theorem_name --timeout 120
+MT task begin --file Main.lean --source source.md --decl theorem_name --start 0 --end 0
 MT task propose <id> --input replacement.txt
 MT task review <id> --input review.json
 MT task attempt <id> --input tactics.txt
@@ -98,8 +99,9 @@ Proof-slot lexical containment deliberately rejects character literals, syntax q
 and unusual quoted declaration names. These unsupported cases are reported, not silently
 rewritten. A model fidelity review is not a mathematical proof of source correspondence.
 
-The old batch pipeline remains experimental; no manifest migration is needed. Neither a
-complete cross-host live demonstration nor a measured improvement over a baseline should be
+The public CLI routes `task` and `check-file` only through the ordinary-file harness/checker;
+old batch commands are rejected. Neither a complete cross-host live demonstration nor a
+measured improvement over a baseline should be
 inferred from passing scripted tests. See [validation.md](validation.md) for actual evidence.
 
 ## Development checks

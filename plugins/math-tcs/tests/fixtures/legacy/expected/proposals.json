@@ -1,7 +1,7 @@
 {
   "module": "Divisibility",
   "title": "Unit 1 — Divisibility",
-  "source": "examples/demo/source/01_unit-1-divisibility.md",
+  "source": "tests/fixtures/legacy/source/01_unit-1-divisibility.md",
   "proposals": [
     {
       "id": "dn-ch1-def-1.1-1",

@@ -1,7 +1,7 @@
 {
   "name": "math-tcs",
   "version": "0.2.0",
-  "description": "Everyday Lean formalization agents with a checked task harness; experimental source-to-Lean batch workflow",
+  "description": "Formalize, review, and simplify Lean declarations with dedicated agents and a checked task harness",
   "author": { "name": "Angela Wu" },
   "license": "MIT",
   "keywords": ["lean", "lean4", "mathlib", "formalization", "workflow", "math", "tcs"]
